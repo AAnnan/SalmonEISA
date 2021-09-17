@@ -78,11 +78,11 @@ delta.cnt.signi <- delta.cnt[rownames(delta.cnt) %in% both_signi,] #Select signi
 #plot_col_deltas(delta.cnt)
 plot_col_deltas(delta.cnt.signi)
 
-#scatter_deltas(delta.cnt)
+scatter_deltas(delta.cnt)
 scatter_deltas(delta.cnt.signi)
 
 ## Average over replicates, build mean Intron/Exon counts with error bars (mean+-sd)
-mean.cnt <- get_means(cnt.norm)
-mean.cnt.signi <- mean.cnt[rownames(mean.cnt) %in% both_signi,] #Select significant genes
+#mean.cnt <- get_means(cnt.norm)
+#mean.cnt.signi <- mean.cnt[rownames(mean.cnt) %in% both_signi,] #Select significant genes
 #plot_col_means(mean.cnt)
-plot_col_means(mean.cnt.signi)
+#plot_col_means(mean.cnt.signi)
