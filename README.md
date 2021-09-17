@@ -33,6 +33,14 @@ Take a look at the headers of each of the following scripts, modify them accordi
 ## Output
 
 * Barplot showing **ΔExon** and **ΔIntron** for each gene (error bars represent the SD to the mean).
-![Barplot](https://i.imgur.com/zixY90M.png)
+
+Significant Δs - All genes             |  Chrom X genes
+:-------------------------------------:|:-------------------------------------:
+![](https://i.imgur.com/i5YA9tR.png)  |  ![](https://i.imgur.com/SDghkyr.png)
+
+
 * Scatterplot showing **ΔExon** in relation to **ΔIntron** for all genes and their Pearson correlation coefficient.
-![Scatterplot](https://i.imgur.com/sQFQMTq.png)
+
+Significant Δs - All genes             |  Chrom X genes
+:-------------------------:|:-------------------------:
+![](https://i.imgur.com/Ac9BV8Q.png)  |  ![](https://i.imgur.com/2avcHMe.png)
