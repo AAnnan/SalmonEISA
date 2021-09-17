@@ -9,7 +9,7 @@ Exon/Intron split Analysis (EISA) pipeline for RNA-Seq *C. elegans* data using G
 
 ## Prerequisites
 
-A Salmon installation
+A Salmon installation:
 * Follow [this](https://combine-lab.github.io/salmon/getting_started/#obtaining-salmon) or [this](https://salmon.readthedocs.io/en/latest/building.html).
 
 The following R libraries: 
