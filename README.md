@@ -1,5 +1,5 @@
 # SalmonEISA
-Exon/Intron split Analysis (EISA) pipeline for RNA-Seq *C. elegans* data using GenomicRanges and Salmon
+Exon/Intron Split Analysis (EISA) pipeline for RNA-Seq *C. elegans* data using GenomicRanges and Salmon
 
 ## Index
 
@@ -16,13 +16,14 @@ The following R libraries:
 * `GenomicFeatures, tidyr, dplyr, edgeR, rtracklayer, BSgenome.Celegans.UCSC.ce11` 
 
 The following files:
+* Cleaned, preprocessed reads in fasta format.
 * *C. elegans* genome file in fasta format: **`c_elegans.PRJNA13758.WS279.genomic.fa`**
 * *C. elegans* annotation file in GFF3 or GTF format: **`c_elegans.PRJNA13758.WS279.annotations.gff3`**
-* *C. elegans* gene look-up table containing WORMBASE IDs, gene names and chromosomes find [here](http://parasite.wormbase.org/biomart/martview?VIRTUALSCHEMANAME=parasite_mart&ATTRIBUTES=wbps_gene.default.feature_page.wbps_gene_id|wbps_gene.default.feature_page.external_gene_id|wbps_gene.default.feature_page.chromosome_name&FILTERS=wbps_gene.default.naive_filters.species_id_1010."caelegprjna13758"&VISIBLEPANEL=attributepanel). Click on `Results` on then `Go`.
+* *C. elegans* gene look-up table containing WORMBASE IDs, gene names and chromosomes. Find it [here](http://parasite.wormbase.org/biomart/martview?VIRTUALSCHEMANAME=parasite_mart&ATTRIBUTES=wbps_gene.default.feature_page.wbps_gene_id|wbps_gene.default.feature_page.external_gene_id|wbps_gene.default.feature_page.chromosome_name&FILTERS=wbps_gene.default.naive_filters.species_id_1010."caelegprjna13758"&VISIBLEPANEL=attributepanel). Click on `Results` on then `Go`.
 
 ## Usage
 
-Run each script in this order:
+Take a look at the headers of each of the following scripts, modify them according to your data and run in order:
 
 1. **`Build_Exon_Intron_fastas.R`**
 1. **`Run_Salmon.sh`**
@@ -32,6 +33,14 @@ Run each script in this order:
 ## Output
 
 * Barplot showing **ΔExon** and **ΔIntron** for each gene (error bars represent the SD to the mean).
-![Barplot](https://i.imgur.com/zixY90M.png)
+
+Significant Δs - All genes             |  Chrom X genes
+:-------------------------------------:|:-------------------------------------:
+![](https://i.imgur.com/i5YA9tR.png)  |  ![](https://i.imgur.com/SDghkyr.png)
+
+
 * Scatterplot showing **ΔExon** in relation to **ΔIntron** for all genes and their Pearson correlation coefficient.
-![Scatterplot](https://i.imgur.com/sQFQMTq.png)
+
+Significant Δs - All genes             |  Chrom X genes
+:-------------------------:|:-------------------------:
+![](https://i.imgur.com/Ac9BV8Q.png)  |  ![](https://i.imgur.com/2avcHMe.png)
