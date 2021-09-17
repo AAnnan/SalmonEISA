@@ -1,5 +1,5 @@
 # SalmonEISA
-Exon/Intron split Analysis (EISA) pipeline for RNA-Seq *C. elegans* data using GenomicRanges and Salmon
+Exon/Intron Split Analysis (EISA) pipeline for RNA-Seq *C. elegans* data using GenomicRanges and Salmon
 
 ## Index
 
