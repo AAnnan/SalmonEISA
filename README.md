@@ -13,7 +13,7 @@ A Salmon installation:
 * Follow [this](https://combine-lab.github.io/salmon/getting_started/#obtaining-salmon) or [this](https://salmon.readthedocs.io/en/latest/building.html).
 
 The following R libraries: 
-* `GenomicFeatures, tidyr, dplyr, edgeR, rtracklayer, BSgenome.Celegans.UCSC.ce11` 
+* `GenomicRanges, GenomicFeatures, tidyr, dplyr, edgeR, rtracklayer, BSgenome.Celegans.UCSC.ce11` 
 
 The following files:
 * Cleaned, preprocessed reads in fasta format.
