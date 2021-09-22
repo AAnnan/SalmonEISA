@@ -27,32 +27,38 @@ CE_exons_NO <- subsetByOverlaps(CE_exons, CE_introns, invert = TRUE, ignore.stra
 #Verify that no overlap is left
 #findOverlaps(CE_exons_NO, CE_introns_NO)
 
-# Remove singletons
-CE_introns_NO <- CE_introns_NO[-which(CE_introns_NO@ranges@width==1),]
-CE_exons_NO <- CE_exons_NO[-which(CE_exons_NO@ranges@width==1),]
-
 # Trimming operations
-e=10L
+e=10L # length of the trim on either side of the feature
+k <- 2 # minimum length of a feature (will be filtered out by salmon index later anyway)
+
+### INTRON TRIMMING
 # Trim intron regions by e=ten basepairs on both sides 
 # to ensure that intronic reads close to the exon junctions 
 # are not counted as exonic reads. EISA 2015
-#CE_introns_NO@ranges@start <- CE_introns_NO@ranges@start + e
-#CE_introns_NO@ranges@width <- CE_introns_NO@ranges@width - e
-#CE_introns_NO <- CE_introns_NO[-which(CE_introns_NO@ranges@width<1),]
+CE_introns_NO@ranges@start <- CE_introns_NO@ranges@start + e
+CE_introns_NO@ranges@width <- CE_introns_NO@ranges@width - e
 
+### EXON TRIMMING
 # Trim exon regions by e=ten basepairs on both sides 
 # to ensure that intronic reads close to the exon junctions 
 # are not counted as exonic reads. EISA 2015
-CE_exons_NO@ranges@start <- CE_exons_NO@ranges@start + e
-CE_exons_NO@ranges@width <- CE_exons_NO@ranges@width - e
-# Remove singletons created as a result of trimming
-CE_exons_NO <- CE_exons_NO[-which(CE_exons_NO@ranges@width<2),]
+#CE_exons_NO@ranges@start <- CE_exons_NO@ranges@start + e
+#CE_exons_NO@ranges@width <- CE_exons_NO@ranges@width - e
 
+### EXON EXPANDING (bad)
 # expand exon regions by e=ten basepairs on both sides
 #CE_exons_NO@ranges@start <- CE_exons_NO@ranges@start - e
 #CE_exons_NO@ranges@width <- CE_exons_NO@ranges@width + e
 # bad solution
 # It obviously adds plenty of overlap between exonic and intronic parts...
+
+# Filter small features
+# Percentage of features that are below the threshold k
+(length(which(CE_introns_NO@ranges@width<=k))/length(CE_introns_NO))*100
+(length(which(CE_exons_NO@ranges@width<=k))/length(CE_exons_NO))*100
+
+CE_introns_NO <- CE_introns_NO[-which(CE_introns_NO@ranges@width<k),]
+CE_exons_NO <- CE_exons_NO[-which(CE_exons_NO@ranges@width<k),]
 
 #Overlaid distributions of exon/intron length
 ggplot() + 
@@ -86,8 +92,8 @@ CE_exons_seq@ranges@NAMES <- get_des(CE_exons_NO, int_or_ex="exon")
 CE_introns_seq@ranges@NAMES <- get_des(CE_introns_NO, int_or_ex="intron")
 
 #export multifastas
-writeXStringSet(CE_exons_seq, "CE_exons_seq.fa", format="fasta", append=FALSE,compress=FALSE)
-writeXStringSet(CE_introns_seq, "CE_introns_seq.fa", format="fasta", append=FALSE,compress=FALSE)
+writeXStringSet(CE_exons_seq, "CE_exons_seq.fa", format="fasta", append=FALSE, compress=FALSE)
+writeXStringSet(CE_introns_seq, "CE_introns_seq.fa", format="fasta", append=FALSE, compress=FALSE)
 
 ###NOT USED
 
