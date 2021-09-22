@@ -231,13 +231,25 @@ plot_col_means <- function(mean.cnt) {
 #' 
 #' @param delta.cnt An eisa df with gene names as rownames and at least 2 columns:
 #' $dIntron and $dExon
+#' @param delta.cnt.signi A subset eisa df with gene names as rownames and at least 2 columns:
+#' $dIntron and $dExon
 #' @return A scatter plot of DeltaIntron/Exon with Pearson correlation coeff
 #' @examples
-#' plot_col_ratios(delta.cnt)
-scatter_deltas <- function(delta.cnt) {
+#' scatter_deltas(delta.cnt,delta.cnt.signi)
+scatter_deltas <- function(delta.cnt,delta.cnt.signi) {
   corEvI <- round(cor(delta.cnt$dIntron,delta.cnt$dExon), 3)
-  ggplot(delta.cnt, aes(x=dIntron, y=dExon)) + geom_point() +
+  corEvI.signi <- round(cor(delta.cnt.signi$dIntron,delta.cnt.signi$dExon), 3)
+  
+  `%notin%` <- Negate(`%in%`)
+  delta.cnt <- delta.cnt[(rownames(delta.cnt) %notin% rownames(delta.cnt.signi)),]
+  
+  ggplot() + 
+    geom_point(data=delta.cnt, mapping=aes(x=dIntron, y=dExon), alpha=0.5) +
+    geom_point(data=delta.cnt.signi, mapping=aes(x=dIntron, y=dExon, color = "FDR<0.05\nfor dIntron & dExon"), alpha=0.75) +
+    ggtitle(paste0('R = ',corEvI), subtitle = paste0('R = ',corEvI.signi)) +
+    scale_colour_manual(name = NULL, values = c("FDR<0.05\nfor dIntron & dExon" = "red")) +
     theme_light() +
-    ggtitle(paste0('Pearson correlation coefficient R = ',corEvI)) +
+    theme(plot.title=element_text(size=12, face="italic", margin = margin(t=40, b = -38)),
+          plot.subtitle=element_text(size=12, face="italic", color="red", margin = margin(t=40, b = -35))) +
     lims(x = c(-2, 2), y = c(-2, 2))
 }

@@ -78,8 +78,7 @@ delta.cnt.signi <- delta.cnt[rownames(delta.cnt) %in% both_signi,] #Select signi
 #plot_col_deltas(delta.cnt)
 plot_col_deltas(delta.cnt.signi)
 
-scatter_deltas(delta.cnt)
-scatter_deltas(delta.cnt.signi)
+scatter_deltas(delta.cnt,delta.cnt.signi)
 
 ## Average over replicates, build mean Intron/Exon counts with error bars (mean+-sd)
 #mean.cnt <- get_means(cnt.norm)
