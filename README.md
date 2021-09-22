@@ -31,16 +31,6 @@ Take a look at the headers of each of the following scripts, modify them accordi
 1. **`SalmonEISA.R`**
 
 ## Output
-
-* Barplot showing **ΔExon** and **ΔIntron** for each gene (error bars represent the SD to the mean).
-
-Only significant Δs in all genes             
-:-------------------------------------:
-![](https://i.imgur.com/CpaFVJX.png)
-
-
-* Scatterplot showing **ΔExon** in relation to **ΔIntron** for all genes (+ the Pearson correlation coefficient).
-
-Significant Δs in red in all genes             
-:-------------------------:
-![](https://i.imgur.com/KCoGAIN.png)
+Barplot showing **ΔExon** and **ΔIntron** for each gene (error bars represent the SD to the mean)             |  Scatterplot showing **ΔExon** in relation to **ΔIntron** for all genes (+ the Pearson correlation coefficient)
+:-------------------------------------:|:-------------------------------------:
+![](https://i.imgur.com/CpaFVJX.png)  |  ![](https://i.imgur.com/KCoGAIN.png)
