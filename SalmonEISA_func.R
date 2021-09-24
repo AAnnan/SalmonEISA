@@ -24,6 +24,7 @@ RowCov <- function(x, y){
 #' cntEx <- get_cnt("rawcounts_intronic.txt")
 get_cnt <- function(path_rc) {
   rc <- read.delim(path_rc)
+  colnames(rc)[1] <- "Gene_IDs"
   cnts <- aggregate(.~Gene_IDs, data=rc, FUN=sum)
   
   rownames(cnts) <- cnts[,1]

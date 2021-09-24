@@ -30,6 +30,9 @@ CE_exons_NO <- subsetByOverlaps(CE_exons, CE_introns, invert = TRUE, ignore.stra
 # Trimming operations
 e=10L # length of the trim on either side of the feature
 k <- 2 # minimum length of a feature (will be filtered out by salmon index later anyway)
+# INFO: Percentage of features that are below the threshold k
+paste0("introns below ",k,' bp: ',round((length(which(CE_introns_NO@ranges@width<=k))/length(CE_introns_NO))*100,1),"% ",length(which(CE_introns_NO@ranges@width<=k)),"/",length(CE_introns_NO))
+paste0("exons below ",k,' bp: ',round((length(which(CE_exons_NO@ranges@width<=k))/length(CE_exons_NO))*100,1),"% ",length(which(CE_exons_NO@ranges@width<=k)),"/",length(CE_exons_NO))
 
 ### INTRON TRIMMING
 # Trim intron regions by e=ten basepairs on both sides 
@@ -53,10 +56,6 @@ CE_introns_NO@ranges@width <- CE_introns_NO@ranges@width - e
 # It obviously adds plenty of overlap between exonic and intronic parts...
 
 # Filter small features
-# Percentage of features that are below the threshold k
-(length(which(CE_introns_NO@ranges@width<=k))/length(CE_introns_NO))*100
-(length(which(CE_exons_NO@ranges@width<=k))/length(CE_exons_NO))*100
-
 CE_introns_NO <- CE_introns_NO[-which(CE_introns_NO@ranges@width<k),]
 CE_exons_NO <- CE_exons_NO[-which(CE_exons_NO@ranges@width<k),]
 
