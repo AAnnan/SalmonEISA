@@ -16,7 +16,7 @@ conditions <- c("WT","WT","WT","WT","dpy26cs","dpy26cs","dpy26cs","dpy26cs")
 
 # read in count tables
 #cntGe <- get_cnt(geFile)
-cntGe <- read.delim(geFile)
+cntGe <- read.delim(geFile, row.names = 1)
 # aggregate the read counts from transcripts to genes
 cntEx <- get_cnt(txFile)
 
@@ -26,16 +26,21 @@ genes.in.both <- intersect(rownames(cntEx),rownames(cntGe))
 cntGe <- cntGe[rownames(cntGe) %in% genes.in.both,]
 cntEx <- cntEx[rownames(cntEx) %in% genes.in.both,]
 
-cntIn <- cntGe - cntEx
-cntIn <- cntIn[cntIn < 0]
+cntGe <- cntGe[ order(row.names(cntGe)), ]
+cntEx <- cntEx[ order(row.names(cntEx)), ]
 
-genes.in.both <- intersect(rownames(cntEx),rownames(cntGe))
-cntGe <- get_names(cntGe, genes.in.both, gene_table, chrom="all")
+cntIn <- cntGe - cntEx
+cntIn[cntIn < 0] <- NA
+cntIn <- na.omit(cntIn)
+
+genes.in.both <- intersect(rownames(cntEx),rownames(cntIn))
+cntIn <- get_names(cntIn, genes.in.both, gene_table, chrom="all")
 cntEx <- get_names(cntEx, genes.in.both, gene_table, chrom="all")
 
 # find genes with sufficient exonic and intronic counts (genes.sel)
 cntEx.norm <- as.data.frame(t(mean(colSums(cntEx))*t(cntEx)/colSums(cntEx))) # normalize samples to avearge sequencing depth for exons
 cntIn.norm <- as.data.frame(t(mean(colSums(cntIn))*t(cntIn)/colSums(cntIn))) # normalize samples to avearge sequencing depth for introns
+#genes.sel <- rowMeans(log2(cntEx.norm+8))>=4.321928 & rowMeans(log2(cntIn.norm+8))>=4.321928
 genes.sel <- rowMeans(log2(cntEx.norm+8))>=5 & rowMeans(log2(cntIn.norm+8))>=5
 
 # combine exon and intron raw counts for edgeR containing genes with sufficient counts in both exonic and intronic levels
