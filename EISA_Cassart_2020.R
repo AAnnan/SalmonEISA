@@ -1,6 +1,6 @@
 getwd()
 #setwd("~/Documents/Project_IZB/biodata/rnaseq/")
-setwd("~/Documents/Project_IZB/Papers/EISA/Habacher 2016 Data/")
+setwd("~/Documents/Project_IZB/Papers/EISA/Cassart 2020 Data/")
 
 library(ggplot2)
 library(tidyr)
@@ -9,7 +9,11 @@ source("/Users/aa/Documents/GitHub/SalmonEISA/SalmonEISA_func.R")
 
 # input files and parameters
 gene_table <- "/Users/aa/Documents/Project_IZB/biodata/rnaseq/c_elegans.PRJNA13758.WS279.TableGeneIDs.tsv"
-insFile <- "intronic_ets4.txt"
+File1 <- "GSE145457_reads_count_per_gene.txt"
+a <- read.delim2(File1, row.names = 1)
+
+
+insFile <- ""
 exsFile <- "exonic_ets4.txt"
 #ofInt <- "dIdE_detectedGenes.txt"
 
