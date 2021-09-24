@@ -9,21 +9,29 @@ source("/Users/aa/Documents/GitHub/SalmonEISA/SalmonEISA_func.R")
 
 # input files and parameters
 gene_table <- "wormbase/c_elegans.PRJNA13758.WS279.TableGeneIDs.tsv"
-insFile <- "rawcounts/10bIntrons/rawcounts_intronic.txt"
-exsFile <- "rawcounts/10bIntrons/rawcounts_exonic.txt"
+txFile <- "rawcounts/GT/rawcounts_transcript.txt"
+geFile <- "rawcounts/GT/rawcounts_gene.txt"
 #conditions <- c("366","366","366","366","382","382","382","382")
 conditions <- c("WT","WT","WT","WT","dpy26cs","dpy26cs","dpy26cs","dpy26cs")
 
-# read in count tables and 
-# aggregate the read counts from exons/introns to genes
-cntEx <- get_cnt(exsFile)
-cntIn <- get_cnt(insFile)
+# read in count tables
+#cntGe <- get_cnt(geFile)
+cntGe <- read.delim(geFile)
+# aggregate the read counts from transcripts to genes
+cntEx <- get_cnt(txFile)
 
 # Get rid of genes existing only in 1 count table
 # Change Gene_IDs to gene names
-genes.in.both <- intersect(rownames(cntEx),rownames(cntIn))
+genes.in.both <- intersect(rownames(cntEx),rownames(cntGe))
+cntGe <- cntGe[rownames(cntGe) %in% genes.in.both,]
+cntEx <- cntEx[rownames(cntEx) %in% genes.in.both,]
+
+cntIn <- cntGe - cntEx
+cntIn <- cntIn[cntIn < 0]
+
+genes.in.both <- intersect(rownames(cntEx),rownames(cntGe))
+cntGe <- get_names(cntGe, genes.in.both, gene_table, chrom="all")
 cntEx <- get_names(cntEx, genes.in.both, gene_table, chrom="all")
-cntIn <- get_names(cntIn, genes.in.both, gene_table, chrom="all")
 
 # find genes with sufficient exonic and intronic counts (genes.sel)
 cntEx.norm <- as.data.frame(t(mean(colSums(cntEx))*t(cntEx)/colSums(cntEx))) # normalize samples to avearge sequencing depth for exons

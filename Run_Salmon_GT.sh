@@ -36,9 +36,10 @@ fa382b3_2=/scratch/aannan/rnaseq/data/382b3/382B3_L2_R1_001_JZWqrZz0eUf3.fastq.g
 fa382b4_1=/scratch/aannan/rnaseq/data/382b4/382B4_L1_R1_001_Y6Xklx9GlZkI.fastq.gz
 fa382b4_2=/scratch/aannan/rnaseq/data/382b4/382B4_L2_R1_001_EGVBFP42rXm4.fastq.gz
 
-cat CE_exons_seq.fa CE_introns_seq.fa c_elegans.PRJNA13758.WS279.genomic.fa > CE_gentrome.fa
+cat CE_genes_seq.fa c_elegans.PRJNA13758.WS279.genomic.fa > CE_gentrome.fa
+#cat CE_transcripts_seq.fa c_elegans.PRJNA13758.WS279.genomic.fa > CE_gentrome.fa
 
-salmon index -t CE_gentrome.fa -i EISA_index --decoys decoys.txt -k 13
+salmon index -t CE_gentrome.fa -i EISA_index --decoys decoys.txt -k 19
 #the k size selected here will act as the minimum acceptable length for a valid match.
 
 salmon quant -i EISA_index -l A -r ${fa366b1_1} ${fa366b1_2} --validateMappings -p 20 -o salmon_out/366b1 --seqBias --gcBias --numBootstraps 100  
