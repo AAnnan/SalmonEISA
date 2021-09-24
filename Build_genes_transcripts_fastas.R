@@ -9,7 +9,7 @@ library(BSgenome.Celegans.UCSC.ce11)
 library(ggplot2)
 
 #CE_gtf_txdb <- makeTxDbFromGFF("c_elegans.PRJNA13758.WS281.annotations.gff3",format="gff3")
-CE_gtf_txdb <- makeTxDbFromGFF("c_elegans.PRJNA13758.WS279.annotations.gff3",format="gff3")
+CE_gtf_txdb <- makeTxDbFromGFF("wormbase/c_elegans.PRJNA13758.WS279.annotations.gff3",format="gff3")
 
 CE_genes <- genes(CE_gtf_txdb, columns="gene_id", filter=NULL, single.strand.genes.only=TRUE)
 CE_transcripts <- transcripts(CE_gtf_txdb, columns=c("gene_id","tx_id", "tx_name"), filter=NULL)
