@@ -1,1 +1,1 @@
-Reproduce fig4 A in [Habacher 2016](https://pubmed.ncbi.nlm.nih.gov/27746047/)
+Use EISA to see transcription inhibition. What they use is a pure inhibitor of transcription termination, which should lead to Tx stop at highly transcribed genes. [Cassart 2020](https://www.science.org/doi/10.1126/sciadv.abc1450)
