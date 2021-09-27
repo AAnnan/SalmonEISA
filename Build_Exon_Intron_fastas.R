@@ -9,7 +9,7 @@ library(BSgenome.Celegans.UCSC.ce11)
 library(ggplot2)
 
 #CE_gtf_txdb <- makeTxDbFromGFF("c_elegans.PRJNA13758.WS281.annotations.gff3",format="gff3")
-CE_gtf_txdb <- makeTxDbFromGFF("c_elegans.PRJNA13758.WS279.annotations.gff3",format="gff3")
+CE_gtf_txdb <- makeTxDbFromGFF("wormbase/c_elegans.PRJNA13758.WS279.annotations.gff3",format="gff3")
 
 ####Extract the non-overlapping exonic or intronic parts from a GTF 
 ####with exonicParts and intronicParts from R package "GenomicFeatures"
