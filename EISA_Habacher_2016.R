@@ -8,7 +8,7 @@ library(dplyr)
 source("/Users/aa/Documents/GitHub/SalmonEISA/SalmonEISA_func.R")
 
 # input files and parameters
-gene_table <- "/Users/aa/Documents/Project_IZB/biodata/rnaseq/c_elegans.PRJNA13758.WS279.TableGeneIDs.tsv"
+gene_table <- "/Users/aa/Documents/Project_IZB/biodata/rnaseq/wormbase/c_elegans.PRJNA13758.WS279.TableGeneIDs.tsv"
 insFile <- "intronic_ets4.txt"
 exsFile <- "exonic_ets4.txt"
 #ofInt <- "dIdE_detectedGenes.txt"
