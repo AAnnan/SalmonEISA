@@ -28,7 +28,9 @@ cntIn <- get_names(cntIn, genes.in.both, gene_table, chrom="all")
 # find genes with sufficient exonic and intronic counts (genes.sel)
 cntEx.norm <- as.data.frame(t(mean(colSums(cntEx))*t(cntEx)/colSums(cntEx))) # normalize samples to avearge sequencing depth for exons
 cntIn.norm <- as.data.frame(t(mean(colSums(cntIn))*t(cntIn)/colSums(cntIn))) # normalize samples to avearge sequencing depth for introns
-genes.sel <- rowMeans(log2(cntEx.norm+8))>=5 & rowMeans(log2(cntIn.norm+8))>=5
+
+#genes.sel <- rowMeans(log2(cntEx.norm+8))>=5 & rowMeans(log2(cntIn.norm+8))>=5 #32 (24)
+genes.sel <- rowMeans(log2(cntEx.norm+8))>=4.321928 & rowMeans(log2(cntIn.norm+8))>=4.321928 #20 (12) 
 
 # combine exon and intron raw counts for edgeR containing genes with sufficient counts in both exonic and intronic levels
 cnt.norm <- cbind(Ex=cntEx.norm[genes.sel,], In=cntIn.norm[genes.sel,])
@@ -76,7 +78,7 @@ delta.cnt.signi <- delta.cnt[rownames(delta.cnt) %in% both_signi,] #Select signi
 
 ##Plots
 #plot_col_deltas(delta.cnt)
-plot_col_deltas(delta.cnt.signi)
+#plot_col_deltas(delta.cnt.signi)
 
 scatter_deltas(delta.cnt,delta.cnt.signi)
 
