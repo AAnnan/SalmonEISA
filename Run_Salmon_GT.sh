@@ -42,17 +42,17 @@ cat CE_genes_seq.fa c_elegans.PRJNA13758.WS279.genomic.fa > CE_gentrome.fa
 salmon index -t CE_gentrome.fa -i EISA_index --decoys decoys.txt -k 19
 #the k size selected here will act as the minimum acceptable length for a valid match.
 
-salmon quant -i EISA_index -l A -r ${fa366b1_1} ${fa366b1_2} --validateMappings --writeMappings --dumpEq -p 20 -o salmon_out/366b1 --seqBias --gcBias --numBootstraps 100  
-salmon quant -i EISA_index -l A -r ${fa382b1_1} ${fa382b1_2} --validateMappings --writeMappings --dumpEq -p 20 -o salmon_out/382b1 --seqBias --gcBias --numBootstraps 100 
+salmon quant -i EISA_index -l A -r ${fa366b1_1} ${fa366b1_2} --validateMappings --writeMappings=366b1.sam --dumpEq -p 20 -o salmon_out/366b1 --seqBias --gcBias --numBootstraps 100  
+salmon quant -i EISA_index -l A -r ${fa382b1_1} ${fa382b1_2} --validateMappings --writeMappings=382b1.sam --dumpEq -p 20 -o salmon_out/382b1 --seqBias --gcBias --numBootstraps 100 
 
-salmon quant -i EISA_index -l A -r ${fa366b2_1} ${fa366b2_2} --validateMappings --writeMappings --dumpEq -p 20 -o salmon_out/366b2 --seqBias --gcBias --numBootstraps 100  
-salmon quant -i EISA_index -l A -r ${fa382b2_1} ${fa382b2_2} --validateMappings --writeMappings --dumpEq -p 20 -o salmon_out/382b2 --seqBias --gcBias --numBootstraps 100  
+salmon quant -i EISA_index -l A -r ${fa366b2_1} ${fa366b2_2} --validateMappings --writeMappings=366b2.sam --dumpEq -p 20 -o salmon_out/366b2 --seqBias --gcBias --numBootstraps 100  
+salmon quant -i EISA_index -l A -r ${fa382b2_1} ${fa382b2_2} --validateMappings --writeMappings=382b2.sam --dumpEq -p 20 -o salmon_out/382b2 --seqBias --gcBias --numBootstraps 100  
 
-salmon quant -i EISA_index -l A -r ${fa366b3_1} ${fa366b3_2} --validateMappings --writeMappings --dumpEq -p 20 -o salmon_out/366b3 --seqBias --gcBias --numBootstraps 100  
-salmon quant -i EISA_index -l A -r ${fa382b3_1} ${fa382b3_2} --validateMappings --writeMappings --dumpEq -p 20 -o salmon_out/382b3 --seqBias --gcBias --numBootstraps 100  
+salmon quant -i EISA_index -l A -r ${fa366b3_1} ${fa366b3_2} --validateMappings --writeMappings=366b3.sam --dumpEq -p 20 -o salmon_out/366b3 --seqBias --gcBias --numBootstraps 100  
+salmon quant -i EISA_index -l A -r ${fa382b3_1} ${fa382b3_2} --validateMappings --writeMappings=382b3.sam --dumpEq -p 20 -o salmon_out/382b3 --seqBias --gcBias --numBootstraps 100  
 
-salmon quant -i EISA_index -l A -r ${fa366b4_1} ${fa366b4_2} --validateMappings --writeMappings --dumpEq -p 20 -o salmon_out/366b4 --seqBias --gcBias --numBootstraps 100  
-salmon quant -i EISA_index -l A -r ${fa382b4_1} ${fa382b4_2} --validateMappings --writeMappings --dumpEq -p 20 -o salmon_out/382b4 --seqBias --gcBias --numBootstraps 100  
+salmon quant -i EISA_index -l A -r ${fa366b4_1} ${fa366b4_2} --validateMappings --writeMappings=366b4.sam --dumpEq -p 20 -o salmon_out/366b4 --seqBias --gcBias --numBootstraps 100  
+salmon quant -i EISA_index -l A -r ${fa382b4_1} ${fa382b4_2} --validateMappings --writeMappings=382b4.sam --dumpEq -p 20 -o salmon_out/382b4 --seqBias --gcBias --numBootstraps 100  
 
 
 conda deactivate
