@@ -11,7 +11,7 @@ source("/Users/aa/Documents/GitHub/SalmonEISA/SalmonEISA_func.R")
 gene_table <- "/Users/aa/Documents/Project_IZB/biodata/rnaseq/wormbase/c_elegans.PRJNA13758.WS279.TableGeneIDs.tsv"
 conditions <- c("N2_mockRNAi","N2_mockRNAi","N2_rege1RNAi","N2_rege1RNAi")#,"glp1_mockRNAi","glp1_mockRNAi","glp1_rege1","glp1_rege1")
 #ofInt <- "dIdE_detectedGenes.txt"
-fromScratch=FALSE
+fromScratch=T
 
 #Functions
 scatter_deltas_H <- function(delta.cnt,delta.cnt.red) {
@@ -129,12 +129,49 @@ if (fromScratch==TRUE) {
   cnt <- cbind(Ex=cntExD[genes.sel,], In=cntInD[genes.sel,])
 }
 
+# edgeR workflow
+factorCondition <- factor(conditions, levels=unique(conditions)) # define experimental factor 'conditions'
+group <- c(1,1,2,2)
+
+if (fromScratch==FALSE) {
+  cntEx <- cntExD
+  cntIn <- cntInD
+}
+
+##Exons
+yEx <- DGEList(counts=cntEx, genes=rownames(cntEx), group=group) # define DGEList object
+yEx <- calcNormFactors(yEx) # determine normalization factors
+designEx <- model.matrix(~ factorCondition) # design matrix
+rownames(designEx) <- colnames(cntEx)
+yEx <- estimateDisp(yEx, designEx) # estimate dispersion
+fitEx <- glmFit(yEx, designEx) # fit generalized linear model
+lrtEx <- glmLRT(fitEx) # calculate likelihood-ratio between full and reduced models
+ttEx <- topTags(lrtEx, n=nrow(yEx)) #final table with significance level for each gene 
+head(ttEx$table)
+
+##Introns
+yIn <- DGEList(counts=cntIn, genes=rownames(cntIn), group=group) # define DGEList object
+yIn <- calcNormFactors(yIn) # determine normalization factors
+designIn <- model.matrix(~ factorCondition) # design matrix
+rownames(designIn) <- colnames(cntIn)
+yIn <- estimateDisp(yIn, designIn) # estimate dispersion
+fitIn <- glmFit(yIn, designIn) # fit generalized linear model
+lrtIn <- glmLRT(fitIn) # calculate likelihood-ratio between full and reduced models
+ttIn <- topTags(lrtIn, n=nrow(yIn)) #final table with significance level for each gene 
+head(ttIn$table)
+
+## Select genes with significant delta Intron/Exon (False Discovery rate inferior than 5%)
+signiEx <- ttEx$table[ttEx$table$FDR<0.05,]
+signiIn <- ttIn$table[ttIn$table$FDR<0.05,]
+both_signi <- intersect(rownames(signiIn),rownames(signiEx))
+
 ## Average over replicates, build delta Intron/Exon with error bars (mean+-sd)
 delta.cnt <- get_deltas_H(cnt)
 
 # Get red genes
 rg <- read.csv("/Users/aa/Documents/GitHub/SalmonEISA/red_genes.csv", header = FALSE)
-delta.cnt.red <- delta.cnt[rownames(delta.cnt) %in% rg$V1,] #Select red genes
+redG <- intersect(rg$V1, both_signi)
+delta.cnt.red <- delta.cnt[rownames(delta.cnt) %in% redG,] #Select red genes
 
 ##Plots
 scatter_deltas_H(delta.cnt,delta.cnt.red)
