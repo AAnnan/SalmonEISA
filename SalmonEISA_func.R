@@ -251,6 +251,5 @@ scatter_deltas <- function(delta.cnt,delta.cnt.signi) {
     scale_colour_manual(name = NULL, values = c("FDR<0.05\nfor dIntron & dExon" = "red")) +
     theme_light() +
     theme(plot.title=element_text(size=12, face="italic", margin = margin(t=40, b = -38)),
-          plot.subtitle=element_text(size=12, face="italic", color="red", margin = margin(t=40, b = -35))) +
-    lims(x = c(-2, 2), y = c(-2, 2))
+          plot.subtitle=element_text(size=12, face="italic", color="red", margin = margin(t=40, b = -35)))# +lims(x = c(-2, 2), y = c(-2, 2))
 }

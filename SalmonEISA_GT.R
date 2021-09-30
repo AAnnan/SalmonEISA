@@ -16,22 +16,22 @@ conditions <- c("WT","WT","WT","WT","dpy26cs","dpy26cs","dpy26cs","dpy26cs")
 
 # read in count tables
 #cntGe <- get_cnt(geFile)
-cntGe <- read.delim(geFile, row.names = 1)
+cntIn <- read.delim(geFile, row.names = 1)
 # aggregate the read counts from transcripts to genes
 cntEx <- get_cnt(txFile)
 
 # Get rid of genes existing only in 1 count table
 # Change Gene_IDs to gene names
-genes.in.both <- intersect(rownames(cntEx),rownames(cntGe))
-cntGe <- cntGe[rownames(cntGe) %in% genes.in.both,]
-cntEx <- cntEx[rownames(cntEx) %in% genes.in.both,]
+#genes.in.both <- intersect(rownames(cntEx),rownames(cntGe))
+#cntGe <- cntGe[rownames(cntGe) %in% genes.in.both,]
+#cntEx <- cntEx[rownames(cntEx) %in% genes.in.both,]
 
-cntGe <- cntGe[ order(row.names(cntGe)), ]
-cntEx <- cntEx[ order(row.names(cntEx)), ]
+#cntGe <- cntGe[ order(row.names(cntGe)), ]
+#cntEx <- cntEx[ order(row.names(cntEx)), ]
 
-cntIn <- cntGe - cntEx
-cntIn[cntIn < 0] <- NA
-cntIn <- na.omit(cntIn)
+#cntIn <- cntGe - cntEx
+#cntIn[cntIn < 0] <- NA
+#cntIn <- na.omit(cntIn)
 
 genes.in.both <- intersect(rownames(cntEx),rownames(cntIn))
 cntIn <- get_names(cntIn, genes.in.both, gene_table, chrom="all")
