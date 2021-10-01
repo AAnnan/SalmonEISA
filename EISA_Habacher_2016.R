@@ -5,6 +5,7 @@ setwd("~/Documents/Project_IZB/biodata/rnaseq/")
 library(ggplot2)
 library(tidyr)
 library(dplyr)
+library(edgeR)
 source("/Users/aa/Documents/GitHub/SalmonEISA/SalmonEISA_func.R")
 
 # input files and parameters
@@ -163,7 +164,7 @@ head(ttIn$table)
 ## Select genes with significant delta Intron/Exon (False Discovery rate inferior than 5%)
 signiEx <- ttEx$table[ttEx$table$FDR<0.05,]
 signiIn <- ttIn$table[ttIn$table$FDR<0.05,]
-both_signi <- intersect(rownames(signiIn),rownames(signiEx))
+both_signi <- union(rownames(signiIn),rownames(signiEx))
 
 ## Average over replicates, build delta Intron/Exon with error bars (mean+-sd)
 delta.cnt <- get_deltas_H(cnt)
