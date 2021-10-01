@@ -41,8 +41,8 @@ cntEx <- get_names(cntEx, genes.in.both, gene_table, chrom="all")
 cntEx.norm <- as.data.frame(t(mean(colSums(cntEx))*t(cntEx)/colSums(cntEx))) # normalize samples to avearge sequencing depth for exons
 cntIn.norm <- as.data.frame(t(mean(colSums(cntIn))*t(cntIn)/colSums(cntIn))) # normalize samples to avearge sequencing depth for introns
 
-genes.sel <- rowMeans(log2(cntEx.norm+8))>=4.321928 & rowMeans(log2(cntIn.norm+8))>=4.321928 #20 (12)
-#genes.sel <- rowMeans(log2(cntEx.norm+8))>=5 & rowMeans(log2(cntIn.norm+8))>=5 #32(24)
+#genes.sel <- rowMeans(log2(cntEx.norm+8))>=4.321928 & rowMeans(log2(cntIn.norm+8))>=4.321928 #20 (12)
+genes.sel <- rowMeans(log2(cntEx.norm+8))>=5 & rowMeans(log2(cntIn.norm+8))>=5 #32(24)
 
 # combine exon and intron raw counts for edgeR containing genes with sufficient counts in both exonic and intronic levels
 cnt.norm <- cbind(Ex=cntEx.norm[genes.sel,], In=cntIn.norm[genes.sel,])
@@ -82,7 +82,7 @@ head(ttIn$table)
 ## Select genes with significant delta Intron/Exon (False Discovery rate inferior than 5%)
 signiEx <- ttEx$table[ttEx$table$FDR<0.05,]
 signiIn <- ttIn$table[ttIn$table$FDR<0.05,]
-both_signi <- intersect(rownames(signiIn),rownames(signiEx))
+both_signi <- union(rownames(signiIn),rownames(signiEx))
 
 ## Average over replicates, build delta Intron/Exon with error bars (mean+-sd)
 delta.cnt <- get_deltas(cnt.norm,logBefore=TRUE)
