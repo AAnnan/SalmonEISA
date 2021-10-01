@@ -33,4 +33,4 @@ Take a look at the headers of each of the following scripts, modify them accordi
 ## Output
 Barplot showing **ΔExon** and **ΔIntron** for each gene (error bars represent the SD to the mean)             |  Scatterplot showing **ΔExon** in relation to **ΔIntron** for all genes (+ the Pearson correlation coefficient)
 :-------------------------------------:|:-------------------------------------:
-![](https://i.imgur.com/CpaFVJX.png)  |  ![](https://i.imgur.com/KCoGAIN.png)
+![](https://i.imgur.com/CpaFVJX.png)  |  ![](https://i.imgur.com/qvHMSq7.png)
