@@ -93,18 +93,18 @@ get_deltas <- function(cnt,logBefore=TRUE) {
   covEx <- RowCov(cnt[,1:4],cnt[,5:8])
   covIn <- RowCov(cnt[,9:12],cnt[,13:16])
   
-  sd.dIntron <- sqrt(((cntIn.366/cntIn.382)^2)*((varIn.366/(cntIn.366^2))+(varIn.382/(cntIn.382^2))-2*(covIn/(cntIn.366*cntIn.382))))
-  sd.dExon <- sqrt(((cntEx.366/cntEx.382)^2)*((varEx.366/(cntEx.366^2))+(varEx.382/(cntEx.382^2))-2*(covEx/(cntEx.366*cntEx.382))))
+  sd.dIntron <- sqrt(((cntIn.382/cntIn.366)^2)*((varIn.366/(cntIn.366^2))+(varIn.382/(cntIn.382^2))-2*(covIn/(cntIn.366*cntIn.382))))
+  sd.dExon <- sqrt(((cntEx.382/cntEx.366)^2)*((varEx.366/(cntEx.366^2))+(varEx.382/(cntEx.382^2))-2*(covEx/(cntEx.366*cntEx.382))))
   
-  dExon <- cntEx.366/cntEx.382
-  dIntron <- cntIn.366/cntIn.382
+  dExon <- cntEx.382/cntEx.366
+  dIntron <- cntIn.382/cntIn.366
   
   if(logBefore) {
     sd.dIntron <- sqrt(varIn.366+varIn.382)
     sd.dExon <- sqrt(varEx.366+varEx.382)
     
-    dExon <- cntEx.366-cntEx.382
-    dIntron <- cntIn.366-cntIn.382
+    dExon <- cntEx.382-cntEx.366
+    dIntron <- cntIn.382-cntIn.366
   }
   
   delta.cnt <- data.frame(dExon=dExon,
