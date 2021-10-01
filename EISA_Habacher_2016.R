@@ -84,6 +84,9 @@ if (fromScratch==TRUE) {
   cntEx <- get_names(cntEx, genes.in.both, gene_table, chrom="all")
   cntIn <- get_names(cntIn, genes.in.both, gene_table, chrom="all")
   
+  cntExRaw <- cntEx
+  cntInRaw <- cntIn
+  
   # Normalize by library size
   cntEx <- as.data.frame(t(mean(colSums(cntEx))*t(cntEx)/colSums(cntEx))) # normalize samples to avearge sequencing depth for exons
   cntIn <- as.data.frame(t(mean(colSums(cntIn))*t(cntIn)/colSums(cntIn))) # normalize samples to avearge sequencing depth for introns
@@ -122,6 +125,9 @@ if (fromScratch==TRUE) {
   cntExD <- get_names(cntExD, genes.in.both, gene_table, chrom="all")
   cntInD <- get_names(cntInD, genes.in.both, gene_table, chrom="all")
   
+  cntExRaw <- (2^cntExD) - 8
+  cntInRaw <- (2^cntInD) - 8
+  
   # find genes with sufficient exonic and intronic counts (genes.sel)
   genes.sel <- rowMeans(cntExD)>=4.321928 & rowMeans(cntInD)>=4.321928 #20 (12)
   #genes.sel <- rowMeans(cntEx)>=5.247928 & rowMeans(cntIn)>=5.247928 #38(30)
@@ -140,10 +146,10 @@ if (fromScratch==FALSE) {
 }
 
 ##Exons
-yEx <- DGEList(counts=cntEx, genes=rownames(cntEx), group=group) # define DGEList object
+yEx <- DGEList(counts=cntExRaw, genes=rownames(cntExRaw), group=group) # define DGEList object
 yEx <- calcNormFactors(yEx) # determine normalization factors
 designEx <- model.matrix(~ factorCondition) # design matrix
-rownames(designEx) <- colnames(cntEx)
+rownames(designEx) <- colnames(cntExRaw)
 yEx <- estimateDisp(yEx, designEx) # estimate dispersion
 fitEx <- glmFit(yEx, designEx) # fit generalized linear model
 lrtEx <- glmLRT(fitEx) # calculate likelihood-ratio between full and reduced models
@@ -151,10 +157,10 @@ ttEx <- topTags(lrtEx, n=nrow(yEx)) #final table with significance level for eac
 head(ttEx$table)
 
 ##Introns
-yIn <- DGEList(counts=cntIn, genes=rownames(cntIn), group=group) # define DGEList object
+yIn <- DGEList(counts=cntInRaw, genes=rownames(cntInRaw), group=group) # define DGEList object
 yIn <- calcNormFactors(yIn) # determine normalization factors
 designIn <- model.matrix(~ factorCondition) # design matrix
-rownames(designIn) <- colnames(cntIn)
+rownames(designIn) <- colnames(cntInRaw)
 yIn <- estimateDisp(yIn, designIn) # estimate dispersion
 fitIn <- glmFit(yIn, designIn) # fit generalized linear model
 lrtIn <- glmLRT(fitIn) # calculate likelihood-ratio between full and reduced models
@@ -162,18 +168,18 @@ ttIn <- topTags(lrtIn, n=nrow(yIn)) #final table with significance level for eac
 head(ttIn$table)
 
 ## Select genes with significant delta Intron/Exon (False Discovery rate inferior than 5%)
-signiEx <- ttEx$table[ttEx$table$FDR<0.05,]
-signiIn <- ttIn$table[ttIn$table$FDR<0.05,]
-both_signi <- union(rownames(signiIn),rownames(signiEx))
+#signiEx <- ttEx$table[ttEx$table$FDR<0.05,]
+#signiIn <- ttIn$table[ttIn$table$FDR<0.05,]
+#both_signi <- intersect(rownames(signiIn),rownames(signiEx))
 
 ## Average over replicates, build delta Intron/Exon with error bars (mean+-sd)
 delta.cnt <- get_deltas_H(cnt)
 
-# Get red genes
-rg <- read.csv("/Users/aa/Documents/GitHub/SalmonEISA/red_genes.csv", header = FALSE)
-redG <- intersect(rg$V1, both_signi)
-delta.cnt.red <- delta.cnt[rownames(delta.cnt) %in% redG,] #Select red genes
+# Select putative REGE-1 targets that predominantly change (more than 2-fold) in the exonic (mature mRNA)
+# but not the intronic (nascent RNA) reads
+redHabach <-intersect(rownames(ttEx$table[ttEx$table$logFC>1.1,]),rownames(ttIn$table[abs(ttIn$table$logFC)<1,]))
 
+delta.cnt.red <- delta.cnt[rownames(delta.cnt) %in% redHabach,] #Select red genes
 ##Plots
 scatter_deltas_H(delta.cnt,delta.cnt.red)
 
