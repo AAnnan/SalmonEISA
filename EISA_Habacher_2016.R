@@ -97,7 +97,7 @@ if (fromScratch==TRUE) {
   
   # find genes with sufficient exonic and intronic counts (genes.sel)
   #genes.sel <- rowMeans(cntEx)>=4.321928 & rowMeans(cntIn)>=4.321928 #20 (12)
-  genes.sel <- rowMeans(cntEx)>=6 & rowMeans(cntIn)>=6 #38(30)
+  genes.sel <- rowMeans(cntEx)>=6 & rowMeans(cntIn)>=6 #64 (56)
   
   # fusion int/ex df
   cnt <- cbind(Ex=cntEx[genes.sel,], In=cntIn[genes.sel,])
