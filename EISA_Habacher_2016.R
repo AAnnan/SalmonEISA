@@ -12,20 +12,22 @@ source("/Users/aa/Documents/GitHub/SalmonEISA/SalmonEISA_func.R")
 gene_table <- "/Users/aa/Documents/Project_IZB/biodata/rnaseq/wormbase/c_elegans.PRJNA13758.WS279.TableGeneIDs.tsv"
 conditions <- c("N2_mockRNAi","N2_mockRNAi","N2_rege1RNAi","N2_rege1RNAi")#,"glp1_mockRNAi","glp1_mockRNAi","glp1_rege1","glp1_rege1")
 #ofInt <- "dIdE_detectedGenes.txt"
-fromScratch=T
+fromScratch=F
 
 #Functions
 scatter_deltas_H <- function(delta.cnt,delta.cnt.red) {
   corEvI <- round(cor(delta.cnt$dIntron,delta.cnt$dExon), 3)
   
   `%notin%` <- Negate(`%in%`)
+  ets4 <- delta.cnt[(rownames(delta.cnt)=="ets-4"),]
   delta.cnt <- delta.cnt[(rownames(delta.cnt) %notin% rownames(delta.cnt.red)),]
   
   ggplot() + 
     geom_point(data=delta.cnt, mapping=aes(x=dIntron, y=dExon), alpha=1, size=0.7) +
-    geom_point(data=delta.cnt.red, mapping=aes(x=dIntron, y=dExon, color = "ets-4"), alpha=1, size=0.7) +
+    geom_point(data=delta.cnt.red, mapping=aes(x=dIntron, y=dExon, color = "Putative post-tc\nregulated genes"), alpha=1, size=0.7) +
+    geom_point(data=ets4, mapping=aes(x=dIntron, y=dExon, color = "ets-4"), alpha=1, size=0.7) +
     ggtitle(paste0('R = ',corEvI)) +
-    scale_colour_manual(name = NULL, values = c("ets-4" = "red")) +
+    scale_colour_manual(name = NULL, values = c("Putative post-tc\nregulated genes" = "red", "ets-4" = "green3")) +
     theme_light() +
     theme(plot.title=element_text(size=12, face="italic", margin = margin(t=40, b = -38))) +
     lims(x = c(-4.2, 8.2), y = c(-4.2, 8.2))
@@ -61,7 +63,6 @@ get_deltas_H <- function(cnt) {
   
 }
 
-
 if (fromScratch==TRUE) {
   
   insFile <- "rawcounts/habacher2016/rawcounts_gene.txt"
@@ -84,8 +85,8 @@ if (fromScratch==TRUE) {
   cntEx <- get_names(cntEx, genes.in.both, gene_table, chrom="all")
   cntIn <- get_names(cntIn, genes.in.both, gene_table, chrom="all")
   
-  cntExRaw <- cntEx
-  cntInRaw <- cntIn
+  cntExRawS <- cntEx
+  cntInRawS <- cntIn
   
   # Normalize by library size
   cntEx <- as.data.frame(t(mean(colSums(cntEx))*t(cntEx)/colSums(cntEx))) # normalize samples to avearge sequencing depth for exons
@@ -125,8 +126,8 @@ if (fromScratch==TRUE) {
   cntExD <- get_names(cntExD, genes.in.both, gene_table, chrom="all")
   cntInD <- get_names(cntInD, genes.in.both, gene_table, chrom="all")
   
-  cntExRaw <- (2^cntExD) - 8
-  cntInRaw <- (2^cntInD) - 8
+  cntExRawH <- (2^cntExD) - 8
+  cntInRawH <- (2^cntInD) - 8
   
   # find genes with sufficient exonic and intronic counts (genes.sel)
   genes.sel <- rowMeans(cntExD)>=4.321928 & rowMeans(cntInD)>=4.321928 #20 (12)
@@ -141,8 +142,11 @@ factorCondition <- factor(conditions, levels=unique(conditions)) # define experi
 group <- c(1,1,2,2)
 
 if (fromScratch==FALSE) {
-  cntEx <- cntExD
-  cntIn <- cntInD
+  cntExRaw <- cntExRawH
+  cntInRaw <- cntInRawH
+} else if (fromScratch==TRUE){
+  cntExRaw <- cntExRawS
+  cntInRaw <- cntInRawS
 }
 
 ##Exons
@@ -168,9 +172,9 @@ ttIn <- topTags(lrtIn, n=nrow(yIn)) #final table with significance level for eac
 head(ttIn$table)
 
 ## Select genes with significant delta Intron/Exon (False Discovery rate inferior than 5%)
-#signiEx <- ttEx$table[ttEx$table$FDR<0.05,]
-#signiIn <- ttIn$table[ttIn$table$FDR<0.05,]
-#both_signi <- intersect(rownames(signiIn),rownames(signiEx))
+signiEx <- ttEx$table[ttEx$table$FDR<0.05,]
+signiIn <- ttIn$table[ttIn$table$FDR<0.05,]
+both_signi <- intersect(rownames(signiIn),rownames(signiEx))
 
 ## Average over replicates, build delta Intron/Exon with error bars (mean+-sd)
 delta.cnt <- get_deltas_H(cnt)
@@ -179,9 +183,53 @@ delta.cnt <- get_deltas_H(cnt)
 # but not the intronic (nascent RNA) reads
 redHabach <-intersect(rownames(ttEx$table[ttEx$table$logFC>1.1,]),rownames(ttIn$table[abs(ttIn$table$logFC)<1,]))
 
+rg <- read.csv("/Users/aa/Documents/GitHub/SalmonEISA/red_genes.csv", header = FALSE)
+redG <- intersect(rg$V1, both_signi)
+
+#delta.cnt.red <- delta.cnt[rownames(delta.cnt) %in% rg$V1,] #Select red genes
 delta.cnt.red <- delta.cnt[rownames(delta.cnt) %in% redHabach,] #Select red genes
 ##Plots
 scatter_deltas_H(delta.cnt,delta.cnt.red)
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+genes.in.bothD <- intersect(rownames(cntExRawH),rownames(cntExRawS))
+cntExRawH <- cntExRawH[rownames(cntExRawH) %in% genes.in.bothD,]
+cntExRawS <- cntExRawS[rownames(cntExRawS) %in% genes.in.bothD,]
+cntInRawH <- cntInRawH[rownames(cntInRawH) %in% genes.in.bothD,]
+cntInRawS <- cntInRawS[rownames(cntInRawS) %in% genes.in.bothD,]
+
+cntExRawH <- cntExRawH[ order(row.names(cntExRawH)), ]
+cntExRawS <- cntExRawS[ order(row.names(cntExRawS)), ]
+cntInRawS <- cntInRawS[ order(row.names(cntInRawS)), ]
+cntInRawH <- cntInRawH[ order(row.names(cntInRawH)), ]
+
+diffEx <- log2(abs(cntExRawH - cntExRawS)+1)
+diffIn <- log2(abs(cntInRawH - cntInRawS)+1)
+
+diffExMean <- rowMeans(diffEx[,1:4])
+diffInMean <- rowMeans(diffIn[,1:4])
+
+diffExMean <- diffExMean[-which(diffExMean==0)]
+diffInMean <- diffInMean[-which(diffInMean==0)]
+
+#Overlaid distributions of exon/intron length
+ggplot() + 
+  geom_density(data = data.frame(exon_error = diffExMean), aes(x = exon_error, fill = "Exon error"), binwidth=0.05, alpha = 0.5) +
+  geom_density(data = data.frame(intron_error = diffInMean), aes(x = intron_error, fill = "Intron error"), binwidth=0.05, alpha = 0.5) +
+  scale_fill_manual(name ="", values = c("Exon error" = "red", "Intron error" = "blue"))
 
