@@ -92,6 +92,9 @@ delta.cnt.signi <- delta.cnt[rownames(delta.cnt) %in% both_signi,] #Select signi
 #plot_col_deltas(delta.cnt)
 #plot_col_deltas(delta.cnt.signi)
 
+#redHabach <-intersect(rownames(ttEx$table[ttEx$table$logFC>1,]),rownames(ttIn$table[abs(ttIn$table$logFC)<1,]))
+#delta.cnt.signi <- delta.cnt[rownames(delta.cnt) %in% redHabach,]
+
 scatter_deltas(delta.cnt,delta.cnt.signi)
 
 ## Average over replicates, build mean Intron/Exon counts with error bars (mean+-sd)
