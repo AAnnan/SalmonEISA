@@ -246,9 +246,9 @@ scatter_deltas <- function(delta.cnt,delta.cnt.signi) {
   
   ggplot() + 
     geom_point(data=delta.cnt, mapping=aes(x=dIntron, y=dExon), alpha=0.5) +
-    geom_point(data=delta.cnt.signi, mapping=aes(x=dIntron, y=dExon, color = "FDR<0.05\nfor dIntron & dExon"), alpha=0.75) +
+    geom_point(data=delta.cnt.signi, mapping=aes(x=dIntron, y=dExon, color = "FDR<0.05\nfor dIntron or dExon"), alpha=0.75) +
     ggtitle(paste0('R = ',corEvI), subtitle = paste0('R = ',corEvI.signi)) +
-    scale_colour_manual(name = NULL, values = c("FDR<0.05\nfor dIntron & dExon" = "red")) +
+    scale_colour_manual(name = NULL, values = c("FDR<0.05\nfor dIntron or dExon" = "red")) +
     theme_light() +
     theme(plot.title=element_text(size=12, face="italic", margin = margin(t=40, b = -38)),
           plot.subtitle=element_text(size=12, face="italic", color="red", margin = margin(t=40, b = -35))) +
