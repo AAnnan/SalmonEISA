@@ -12,26 +12,8 @@ source("/Users/aa/Documents/GitHub/SalmonEISA/SalmonEISA_func.R")
 gene_table <- "/Users/aa/Documents/Project_IZB/biodata/rnaseq/wormbase/c_elegans.PRJNA13758.WS279.TableGeneIDs.tsv"
 conditions <- c("N2_mockRNAi","N2_mockRNAi","N2_rege1RNAi","N2_rege1RNAi")#,"glp1_mockRNAi","glp1_mockRNAi","glp1_rege1","glp1_rege1")
 #ofInt <- "dIdE_detectedGenes.txt"
-fromScratch=F
-
+fromScratch=T
 #Functions
-scatter_deltas_H <- function(delta.cnt,delta.cnt.red) {
-  corEvI <- round(cor(delta.cnt$dIntron,delta.cnt$dExon), 3)
-  
-  `%notin%` <- Negate(`%in%`)
-  ets4 <- delta.cnt[(rownames(delta.cnt)=="ets-4"),]
-  delta.cnt <- delta.cnt[(rownames(delta.cnt) %notin% rownames(delta.cnt.red)),]
-  
-  ggplot() + 
-    geom_point(data=delta.cnt, mapping=aes(x=dIntron, y=dExon), alpha=1, size=0.7) +
-    geom_point(data=delta.cnt.red, mapping=aes(x=dIntron, y=dExon, color = "Putative post-tc\nregulated genes"), alpha=1, size=0.7) +
-    geom_point(data=ets4, mapping=aes(x=dIntron, y=dExon, color = "ets-4"), alpha=1, size=0.7) +
-    ggtitle(paste0('R = ',corEvI)) +
-    scale_colour_manual(name = NULL, values = c("Putative post-tc\nregulated genes" = "red", "ets-4" = "green3")) +
-    theme_light() +
-    theme(plot.title=element_text(size=12, face="italic", margin = margin(t=40, b = -38))) +
-    lims(x = c(-4.2, 8.2), y = c(-4.2, 8.2))
-}
 get_deltas_H <- function(cnt) {
   
   cntEx.mock <- rowMeans(cnt[,1:2])
@@ -61,6 +43,42 @@ get_deltas_H <- function(cnt) {
   
   return(na.omit(delta.cnt[is.finite(rowSums(delta.cnt)),]))
   
+}
+scatter_deltas_H <- function(delta.cnt,delta.cnt.red) {
+  corEvI <- round(cor(delta.cnt$dIntron,delta.cnt$dExon), 3)
+  
+  `%notin%` <- Negate(`%in%`)
+  ets4 <- delta.cnt[(rownames(delta.cnt)=="ets-4"),]
+  delta.cnt <- delta.cnt[(rownames(delta.cnt) %notin% rownames(delta.cnt.red)),]
+  
+  ggplot() + 
+    geom_point(data=delta.cnt, mapping=aes(x=dIntron, y=dExon), alpha=1, size=0.7) +
+    geom_point(data=delta.cnt.red, mapping=aes(x=dIntron, y=dExon, color = "Putative post-tc\nregulated genes"), alpha=1, size=0.7) +
+    geom_point(data=ets4, mapping=aes(x=dIntron, y=dExon, color = "ets-4"), alpha=1, size=0.7) +
+    ggtitle(paste0('R = ',corEvI)) +
+    scale_colour_manual(name = NULL, values = c("Putative post-tc\nregulated genes" = "red", "ets-4" = "green3")) +
+    theme_light() +
+    theme(plot.title=element_text(size=12, face="italic", margin = margin(t=40, b = -38))) +
+    lims(x = c(-4.2, 8.2), y = c(-4.2, 8.2))
+}
+scatter_deltas_EdgeR <- function(ttIn,ttEx) {
+  delta.cnt <- data.frame(dExon=tt.df.ex$logFC, dIntron=tt.df.in$logFC, row.names = rownames(tt.df.ex))
+  
+  corEvI <- round(cor(delta.cnt$dIntron,delta.cnt$dExon), 3)
+  
+  `%notin%` <- Negate(`%in%`)
+  ets4 <- delta.cnt[(rownames(delta.cnt)=="ets-4"),]
+  delta.cnt <- delta.cnt[(rownames(delta.cnt) %notin% rownames(delta.cnt.red)),]
+  
+  ggplot() + 
+    geom_point(data=delta.cnt, mapping=aes(x=dIntron, y=dExon), alpha=1, size=0.7) +
+    geom_point(data=delta.cnt.red, mapping=aes(x=dIntron, y=dExon, color = "Putative post-tc\nregulated genes"), alpha=1, size=0.7) +
+    geom_point(data=ets4, mapping=aes(x=dIntron, y=dExon, color = "ets-4"), alpha=1, size=0.7) +
+    ggtitle(paste0('R = ',corEvI)) +
+    scale_colour_manual(name = NULL, values = c("Putative post-tc\nregulated genes" = "red", "ets-4" = "green3")) +
+    theme_light() +
+    theme(plot.title=element_text(size=12, face="italic", margin = margin(t=40, b = -38))) +
+    lims(x = c(-4.2, 8.2), y = c(-4.2, 8.2))
 }
 
 if (fromScratch==TRUE) {
@@ -174,7 +192,7 @@ head(ttIn$table)
 ## Select genes with significant delta Intron/Exon (False Discovery rate inferior than 5%)
 signiEx <- ttEx$table[ttEx$table$FDR<0.05,]
 signiIn <- ttIn$table[ttIn$table$FDR<0.05,]
-both_signi <- intersect(rownames(signiIn),rownames(signiEx))
+both_signi <- union(rownames(signiIn),rownames(signiEx))
 
 ## Average over replicates, build delta Intron/Exon with error bars (mean+-sd)
 delta.cnt <- get_deltas_H(cnt)
@@ -183,20 +201,54 @@ delta.cnt <- get_deltas_H(cnt)
 # but not the intronic (nascent RNA) reads
 redHabach <-intersect(rownames(ttEx$table[ttEx$table$logFC>1.1,]),rownames(ttIn$table[abs(ttIn$table$logFC)<1,]))
 
-rg <- read.csv("/Users/aa/Documents/GitHub/SalmonEISA/red_genes.csv", header = FALSE)
-redG <- intersect(rg$V1, both_signi)
+#rg <- read.csv("/Users/aa/Documents/GitHub/SalmonEISA/red_genes.csv", header = FALSE)
+#redG <- intersect(rg$V1, both_signi)
 
 #delta.cnt.red <- delta.cnt[rownames(delta.cnt) %in% rg$V1,] #Select red genes
 delta.cnt.red <- delta.cnt[rownames(delta.cnt) %in% redHabach,] #Select red genes
 ##Plots
 scatter_deltas_H(delta.cnt,delta.cnt.red)
 
+#delta.cnt.black <- delta.cnt[rownames(delta.cnt) %in% both_signi,] #Select red genes
+scatter_deltas_H2 <- function(delta.cnt,delta.cnt.red,delta.cnt.black) {
+  corEvI <- round(cor(delta.cnt$dIntron,delta.cnt$dExon), 3)
+  
+  `%notin%` <- Negate(`%in%`)
+  ets4 <- delta.cnt[(rownames(delta.cnt)=="ets-4"),]
+  delta.cnt <- delta.cnt[(rownames(delta.cnt) %notin% rownames(delta.cnt.red)),]
+  delta.cnt <- delta.cnt[(rownames(delta.cnt) %notin% rownames(delta.cnt.black)),]
+  
+  ggplot() + 
+    geom_point(data=delta.cnt, mapping=aes(x=dIntron, y=dExon), alpha=0.5, size=1) +
+    geom_point(data=delta.cnt.black, mapping=aes(x=dIntron, y=dExon, color = "FDR<0.05\ndIntron or dExon\n"), alpha=0.5, size=1) +
+    geom_point(data=delta.cnt.red, mapping=aes(x=dIntron, y=dExon, color = "Putative post-tc\nregulated genes\n"), alpha=0.5, size=1) +
+    geom_point(data=ets4, mapping=aes(x=dIntron, y=dExon, color = "ets-4"), alpha=0.5, size=1.2) +
+    ggtitle(paste0('R = ',corEvI)) +
+    scale_colour_manual(name = NULL, values = c("FDR<0.05\ndIntron or dExon\n"="blue","Putative post-tc\nregulated genes\n" = "red", "ets-4" = "green3")) +
+    theme_light() +
+    theme(plot.title=element_text(size=12, face="italic", margin = margin(t=40, b = -38))) +
+    lims(x = c(-4.2, 8.2), y = c(-4.2, 8.2))
+}
 
+##Plots
+#scatter_deltas_H2(delta.cnt,delta.cnt.red, delta.cnt.black)
 
+tt.df.in <- data.frame(ttIn)
+tt.df.ex <- data.frame(ttEx)
 
+tt.df.in <- tt.df.in[ order(row.names(tt.df.in)), ]
+tt.df.ex <- tt.df.ex[ order(row.names(tt.df.ex)), ]
 
+if (fromScratch==FALSE) {
+  genes.sel2 <- tt.df.ex$logCPM>=4 & tt.df.in$logCPM>=4 #20 (12)
+} else if (fromScratch==TRUE){
+  genes.sel2 <- tt.df.ex$logCPM>=6 & tt.df.in$logCPM>=6 #64 (56)
+}
 
+tt.df.in <- tt.df.in[genes.sel2,]
+tt.df.ex <- tt.df.ex[genes.sel2,]
 
+scatter_deltas_EdgeR(tt.df.in,tt.df.ex)
 
 
 
