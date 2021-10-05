@@ -34,8 +34,8 @@ cntEx <- get_cnt(txFile)
 #cntIn <- na.omit(cntIn)
 
 genes.in.both <- intersect(rownames(cntEx),rownames(cntIn))
-cntIn <- get_names(cntIn, genes.in.both, gene_table, chrom="all")
-cntEx <- get_names(cntEx, genes.in.both, gene_table, chrom="all")
+cntIn <- get_names(cntIn, genes.in.both, gene_table, chrom="X")
+cntEx <- get_names(cntEx, genes.in.both, gene_table, chrom="X")
 
 # find genes with sufficient exonic and intronic counts (genes.sel)
 cntEx.norm <- as.data.frame(t(mean(colSums(cntEx))*t(cntEx)/colSums(cntEx))) # normalize samples to avearge sequencing depth for exons
@@ -96,7 +96,7 @@ delta.cnt.signi <- delta.cnt[rownames(delta.cnt) %in% both_signi,] #Select signi
 #delta.cnt.signi <- delta.cnt[rownames(delta.cnt) %in% redHabach,]
 
 scatter_deltas(delta.cnt,delta.cnt.signi)
-
+delta.cnt.signi[delta.cnt.signi$dIntron< -2 & delta.cnt.signi$dExon> -1 ,]
 ## Average over replicates, build mean Intron/Exon counts with error bars (mean+-sd)
 #mean.cnt <- get_means(cnt.norm)
 #mean.cnt.signi <- mean.cnt[rownames(mean.cnt) %in% both_signi,] #Select significant genes
