@@ -229,7 +229,32 @@ scatter_deltas_H2 <- function(delta.cnt,delta.cnt.red,delta.cnt.black) {
     theme(plot.title=element_text(size=12, face="italic", margin = margin(t=40, b = -38))) +
     lims(x = c(-4.2, 8.2), y = c(-4.2, 8.2))
 }
-
+scatter_deltas_s3 <- function(delta.cnt,signiEx,signiIn) {
+  `%notin%` <- Negate(`%in%`)
+  corEvI <- round(cor(delta.cnt$dIntron,delta.cnt$dExon), 3)
+  both_signi <- intersect(rownames(signiIn),rownames(signiEx))
+  signiIn <- signiIn[rownames(signiIn) %notin% both_signi,]
+  signiEx <- signiEx[rownames(signiEx) %notin% both_signi,]
+  
+  delta.cnt.Sin <- delta.cnt[rownames(delta.cnt) %in% rownames(signiIn),]
+  delta.cnt.Sex <- delta.cnt[rownames(delta.cnt) %in% rownames(signiEx),]
+  delta.cnt.signi <- delta.cnt[rownames(delta.cnt) %in% both_signi,]
+  
+  delta.cnt <- delta.cnt[(rownames(delta.cnt) %notin% rownames(delta.cnt.Sin)),]
+  delta.cnt <- delta.cnt[(rownames(delta.cnt) %notin% rownames(delta.cnt.Sex)),]
+  delta.cnt <- delta.cnt[(rownames(delta.cnt) %notin% rownames(delta.cnt.signi)),]
+  
+  ggplot() + 
+    geom_point(data=delta.cnt, mapping=aes(x=dIntron, y=dExon), alpha=0.5, size=1) +
+    geom_point(data=delta.cnt.Sex, mapping=aes(x=dIntron, y=dExon, color = "FDR<0.05\ndExon only\n"), alpha=0.5, size=1) +
+    geom_point(data=delta.cnt.Sin, mapping=aes(x=dIntron, y=dExon, color = "FDR<0.05\ndIntron only\n"), alpha=0.5, size=1) +
+    geom_point(data=delta.cnt.signi, mapping=aes(x=dIntron, y=dExon, color = "FDR<0.05\ndIntron and dExon\n"), alpha=0.7, size=1) +
+    ggtitle(paste0('R = ',corEvI)) +
+    scale_colour_manual(name = NULL, values = c("FDR<0.05\ndExon only\n" = "yellow3", "FDR<0.05\ndIntron only\n" = "green3","FDR<0.05\ndIntron and dExon\n"="red")) +
+    theme_light() +
+    theme(plot.title=element_text(size=12, face="italic", margin = margin(t=40, b = -38)))
+}
+scatter_deltas_s3(delta.cnt,signiEx,signiIn)
 ##Plots
 #scatter_deltas_H2(delta.cnt,delta.cnt.red, delta.cnt.black)
 
@@ -251,37 +276,4 @@ tt.df.ex <- tt.df.ex[genes.sel2,]
 scatter_deltas_EdgeR(tt.df.in,tt.df.ex)
 
 
-
-
-
-
-
-
-
-
-genes.in.bothD <- intersect(rownames(cntExRawH),rownames(cntExRawS))
-cntExRawH <- cntExRawH[rownames(cntExRawH) %in% genes.in.bothD,]
-cntExRawS <- cntExRawS[rownames(cntExRawS) %in% genes.in.bothD,]
-cntInRawH <- cntInRawH[rownames(cntInRawH) %in% genes.in.bothD,]
-cntInRawS <- cntInRawS[rownames(cntInRawS) %in% genes.in.bothD,]
-
-cntExRawH <- cntExRawH[ order(row.names(cntExRawH)), ]
-cntExRawS <- cntExRawS[ order(row.names(cntExRawS)), ]
-cntInRawS <- cntInRawS[ order(row.names(cntInRawS)), ]
-cntInRawH <- cntInRawH[ order(row.names(cntInRawH)), ]
-
-diffEx <- log2(abs(cntExRawH - cntExRawS)+1)
-diffIn <- log2(abs(cntInRawH - cntInRawS)+1)
-
-diffExMean <- rowMeans(diffEx[,1:4])
-diffInMean <- rowMeans(diffIn[,1:4])
-
-diffExMean <- diffExMean[-which(diffExMean==0)]
-diffInMean <- diffInMean[-which(diffInMean==0)]
-
-#Overlaid distributions of exon/intron length
-ggplot() + 
-  geom_density(data = data.frame(exon_error = diffExMean), aes(x = exon_error, fill = "Exon error"), binwidth=0.05, alpha = 0.5) +
-  geom_density(data = data.frame(intron_error = diffInMean), aes(x = intron_error, fill = "Intron error"), binwidth=0.05, alpha = 0.5) +
-  scale_fill_manual(name ="", values = c("Exon error" = "red", "Intron error" = "blue"))
 
