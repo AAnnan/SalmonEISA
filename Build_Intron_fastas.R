@@ -1,3 +1,4 @@
+#this script will only create the intron list, get the transcript list from wormbase
 getwd()
 setwd("~/Documents/Project_IZB/biodata/rnaseq/")
 options(scipen=999) #prevent sci notation
