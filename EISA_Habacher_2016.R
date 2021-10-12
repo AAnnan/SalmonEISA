@@ -58,8 +58,8 @@ scatter_deltas_H <- function(delta.cnt,delta.cnt.red) {
     ggtitle(paste0('R = ',corEvI)) +
     scale_colour_manual(name = NULL, values = c("Putative post-tc\nregulated genes" = "red", "ets-4" = "green3")) +
     theme_light() +
-    theme(plot.title=element_text(size=12, face="italic", margin = margin(t=40, b = -38))) +
-    lims(x = c(-4.2, 8.2), y = c(-4.2, 8.2))
+    theme(plot.title=element_text(size=12, face="italic", margin = margin(t=40, b = -38)))
+    
 }
 scatter_deltas_EdgeR <- function(ttIn,ttEx) {
   delta.cnt <- data.frame(dExon=tt.df.ex$logFC, dIntron=tt.df.in$logFC, row.names = rownames(tt.df.ex))
@@ -77,8 +77,8 @@ scatter_deltas_EdgeR <- function(ttIn,ttEx) {
     ggtitle(paste0('R = ',corEvI)) +
     scale_colour_manual(name = NULL, values = c("Putative post-tc\nregulated genes" = "red", "ets-4" = "green3")) +
     theme_light() +
-    theme(plot.title=element_text(size=12, face="italic", margin = margin(t=40, b = -38))) +
-    lims(x = c(-4.2, 8.2), y = c(-4.2, 8.2))
+    theme(plot.title=element_text(size=12, face="italic", margin = margin(t=40, b = -38)))
+    
 }
 
 if (fromScratch==TRUE) {
@@ -209,7 +209,7 @@ delta.cnt.red <- delta.cnt[rownames(delta.cnt) %in% redHabach,] #Select red gene
 ##Plots
 scatter_deltas_H(delta.cnt,delta.cnt.red)
 
-#delta.cnt.black <- delta.cnt[rownames(delta.cnt) %in% both_signi,] #Select red genes
+delta.cnt.black <- delta.cnt[rownames(delta.cnt) %in% both_signi,] #Select red genes
 scatter_deltas_H2 <- function(delta.cnt,delta.cnt.red,delta.cnt.black) {
   corEvI <- round(cor(delta.cnt$dIntron,delta.cnt$dExon), 3)
   
@@ -226,8 +226,8 @@ scatter_deltas_H2 <- function(delta.cnt,delta.cnt.red,delta.cnt.black) {
     ggtitle(paste0('R = ',corEvI)) +
     scale_colour_manual(name = NULL, values = c("FDR<0.05\ndIntron or dExon\n"="blue","Putative post-tc\nregulated genes\n" = "red", "ets-4" = "green3")) +
     theme_light() +
-    theme(plot.title=element_text(size=12, face="italic", margin = margin(t=40, b = -38))) +
-    lims(x = c(-4.2, 8.2), y = c(-4.2, 8.2))
+    theme(plot.title=element_text(size=12, face="italic", margin = margin(t=40, b = -38)))
+    
 }
 scatter_deltas_s3 <- function(delta.cnt,signiEx,signiIn) {
   `%notin%` <- Negate(`%in%`)
@@ -253,10 +253,11 @@ scatter_deltas_s3 <- function(delta.cnt,signiEx,signiIn) {
     scale_colour_manual(name = NULL, values = c("FDR<0.05\ndExon only\n" = "yellow3", "FDR<0.05\ndIntron only\n" = "green3","FDR<0.05\ndIntron and dExon\n"="red")) +
     theme_light() +
     theme(plot.title=element_text(size=12, face="italic", margin = margin(t=40, b = -38)))
+    
 }
-scatter_deltas_s3(delta.cnt,signiEx,signiIn)
+#scatter_deltas_s3(delta.cnt,signiEx,signiIn)
 ##Plots
-#scatter_deltas_H2(delta.cnt,delta.cnt.red, delta.cnt.black)
+scatter_deltas_H2(delta.cnt,delta.cnt.red, delta.cnt.black)
 
 tt.df.in <- data.frame(ttIn)
 tt.df.ex <- data.frame(ttEx)
@@ -274,6 +275,7 @@ tt.df.in <- tt.df.in[genes.sel2,]
 tt.df.ex <- tt.df.ex[genes.sel2,]
 
 scatter_deltas_EdgeR(tt.df.in,tt.df.ex)
+delta.cnt.EdgeR <- data.frame(dExon=tt.df.ex$logFC, dIntron=tt.df.in$logFC, row.names = rownames(tt.df.ex))
+scatter_deltas_s3(delta.cnt.EdgeR,signiEx,signiIn)
 
-
-
+delta.cnt.edgeR.signi[delta.cnt.edgeR.signi$dIntron>2 & delta.cnt.edgeR.signi$dExon>2 ,]
