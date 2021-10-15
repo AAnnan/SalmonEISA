@@ -9,21 +9,21 @@ source("/Users/aa/Documents/GitHub/SalmonEISA/SalmonEISA_func.R")
 
 # input files and parameters
 gene_table <- "wormbase/c_elegans.PRJNA13758.WS279.TableGeneIDs.tsv"
-insFile <- "rawcounts/10bIntrons/rawcounts_intronic.txt"
-exsFile <- "rawcounts/10bIntrons/rawcounts_exonic.txt"
+insFile <- "rawcounts/12_10_IT95bp/rawcounts_intron.txt"
+txFile <- "rawcounts/12_10_IT95bp/rawcounts_transcript.txt"
 #conditions <- c("366","366","366","366","382","382","382","382")
 conditions <- c("WT","WT","WT","WT","dpy26cs","dpy26cs","dpy26cs","dpy26cs")
 
 # read in count tables and 
 # aggregate the read counts from exons/introns to genes
-cntEx <- get_cnt(exsFile)
+cntEx <- get_cnt(txFile)
 cntIn <- get_cnt(insFile)
 
 # Get rid of genes existing only in 1 count table
 # Change Gene_IDs to gene names
 genes.in.both <- intersect(rownames(cntEx),rownames(cntIn))
-cntEx <- get_names(cntEx, genes.in.both, gene_table, chrom="all")
-cntIn <- get_names(cntIn, genes.in.both, gene_table, chrom="all")
+cntEx <- get_names(cntEx, genes.in.both, gene_table, chrom="X")
+cntIn <- get_names(cntIn, genes.in.both, gene_table, chrom="X")
 
 # find genes with sufficient exonic and intronic counts (genes.sel)
 cntEx.norm <- as.data.frame(t(mean(colSums(cntEx))*t(cntEx)/colSums(cntEx))) # normalize samples to avearge sequencing depth for exons
@@ -71,16 +71,33 @@ head(ttIn$table)
 signiEx <- ttEx$table[ttEx$table$FDR<0.05,]
 signiIn <- ttIn$table[ttIn$table$FDR<0.05,]
 both_signi <- union(rownames(signiIn),rownames(signiEx))
-
 ## Average over replicates, build delta Intron/Exon with error bars (mean+-sd)
 delta.cnt <- get_deltas(cnt.norm,logBefore=TRUE)
 delta.cnt.signi <- delta.cnt[rownames(delta.cnt) %in% both_signi,] #Select significant genes
 
+tt.df.in <- data.frame(ttIn)
+tt.df.ex <- data.frame(ttEx)
+delta.cnt.edgeR <- data.frame(row.names = rownames(tt.df.ex[order(row.names(tt.df.ex)),]),dExon=tt.df.ex$logFC[order(row.names(tt.df.ex))], dIntron=tt.df.in$logFC[order(row.names(tt.df.in))]) 
+delta.cnt.edgeR.signi <- delta.cnt.edgeR[rownames(delta.cnt.edgeR) %in% both_signi,]
+
 ##Plots
+
+scatter_deltas(delta.cnt.edgeR,delta.cnt.edgeR.signi)
+scatter_deltas(delta.cnt,delta.cnt.signi)
+scatter_deltas_s3(delta.cnt,signiEx,signiIn)
+
+#Looking for specific genes
+delta.cnt.signi[delta.cnt.signi$dIntron< -2 & delta.cnt.signi$dExon> -1 ,]
+delta.cnt.edgeR.signi[delta.cnt.edgeR.signi$dIntron>2 & delta.cnt.edgeR.signi$dExon>2 ,]
+delta.cnt.signi[rownames(delta.cnt.signi) == "sep-1",]
+cntEx.norm[rownames(cntEx.norm) == "sep-1",]
+cntIn.norm[rownames(cntIn.norm) == "sep-1",]
+
 #plot_col_deltas(delta.cnt)
 #plot_col_deltas(delta.cnt.signi)
 
-scatter_deltas(delta.cnt,delta.cnt.signi)
+#redHabach <-intersect(rownames(ttEx$table[ttEx$table$logFC>1,]),rownames(ttIn$table[abs(ttIn$table$logFC)<1,]))
+#delta.cnt.signi <- delta.cnt[rownames(delta.cnt) %in% redHabach,]
 
 ## Average over replicates, build mean Intron/Exon counts with error bars (mean+-sd)
 #mean.cnt <- get_means(cnt.norm)
