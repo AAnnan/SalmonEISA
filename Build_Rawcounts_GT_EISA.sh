@@ -39,7 +39,7 @@ done
 ### Build final raw geneic/transcriptic counts
 echo "Building raw geneic/transcriptic count files"
 
-echo "Gene_IDs" > order_WBGenes_GE && awk 'NR==FNR{a[$1];next} $1 in a{print $2}' ${d}/${s[0]}${r[0]}/quant.sf gene_gen_list.txt >> order_WBGenes_GE
+echo "Gene_IDs" > order_WBGenes_GE && awk 'NR==FNR{a[$1];next} $1 in a{print $1}' ${d}/${s[0]}${r[0]}/quant.sf gene_gen_list.txt >> order_WBGenes_GE
 echo "Gene_IDs" > order_WBGenes_Tx && awk 'NR==FNR{a[$1];next} $1 in a{print $2}' ${d}/${s[0]}${r[0]}/quant.sf gene_tx_list.txt >> order_WBGenes_Tx
 
 # Paste together all the columns
