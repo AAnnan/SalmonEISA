@@ -9,8 +9,8 @@ source("/Users/aa/Documents/GitHub/SalmonEISA/SalmonEISA_func.R")
 
 # input files and parameters
 gene_table <- "wormbase/c_elegans.PRJNA13758.WS279.TableGeneIDs.tsv"
-txFile <- "rawcounts/08_10_GT/rawcounts_transcript.txt"
-geFile <- "rawcounts/08_10_GT/rawcounts_gene.txt"
+txFile <- "rawcounts/15_10_GT/rawcounts_transcript.txt"
+geFile <- "rawcounts/15_10_GT/rawcounts_gene.txt"
 #conditions <- c("366","366","366","366","382","382","382","382")
 conditions <- c("WT","WT","WT","WT","dpy26cs","dpy26cs","dpy26cs","dpy26cs")
 
