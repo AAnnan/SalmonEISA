@@ -34,8 +34,8 @@ cntEx <- get_cnt(txFile)
 #cntIn <- na.omit(cntIn)
 
 genes.in.both <- intersect(rownames(cntEx),rownames(cntIn))
-cntIn <- get_names(cntIn, genes.in.both, gene_table, chrom="all")
-cntEx <- get_names(cntEx, genes.in.both, gene_table, chrom="all")
+cntIn <- get_names(cntIn, genes.in.both, gene_table, chrom="X")
+cntEx <- get_names(cntEx, genes.in.both, gene_table, chrom="X")
 
 # find genes with sufficient exonic and intronic counts (genes.sel)
 cntEx.norm <- as.data.frame(t(mean(colSums(cntEx))*t(cntEx)/colSums(cntEx))) # normalize samples to avearge sequencing depth for exons
@@ -95,9 +95,9 @@ delta.cnt.edgeR.signi <- delta.cnt.edgeR[rownames(delta.cnt.edgeR) %in% both_sig
 
 ##Plots
 
-scatter_deltas(delta.cnt.edgeR,delta.cnt.edgeR.signi)
-scatter_deltas(delta.cnt,delta.cnt.signi)
-scatter_deltas_s3(delta.cnt,signiEx,signiIn)
+#scatter_deltas(delta.cnt.edgeR,delta.cnt.edgeR.signi)
+#scatter_deltas(delta.cnt,delta.cnt.signi)
+scatter_deltas_s3(delta.cnt.edgeR,signiEx,signiIn)
 
 #Looking for specific genes
 delta.cnt.signi[delta.cnt.signi$dIntron< -2 & delta.cnt.signi$dExon> -1 ,]
