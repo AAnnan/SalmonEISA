@@ -21,7 +21,7 @@ CE_introns <- intronicParts(CE_gtf_txdb, linked.to.single.gene.only=FALSE)
 CE_introns_NO <- subsetByOverlaps(CE_introns, CE_exons, invert = TRUE, ignore.strand=FALSE)
 
 # Trimming operations
-e=95L # length of the trim/expansion on either side of the feature
+e=99L # length of the trim/expansion on either side of the feature
 
 ### INTRON EXPANDING 
 # Trim intron regions by e=ten basepairs on both sides 
