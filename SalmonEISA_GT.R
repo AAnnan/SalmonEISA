@@ -80,8 +80,10 @@ ttIn <- topTags(lrtIn, n=nrow(yIn)) #final table with significance level for eac
 head(ttIn$table)
 
 ## Select genes with significant delta Intron/Exon (False Discovery rate inferior than 5%)
-signiEx <- ttEx$table[ttEx$table$FDR<0.05,]
-signiIn <- ttIn$table[ttIn$table$FDR<0.05,]
+ttEx$table$PValue <- -log(p.adjust(ttEx$table$PValue, method = "BH"))
+ttIn$table$PValue <- -log(p.adjust(ttIn$table$PValue, method = "BH"))
+signiEx <- ttEx$table[ttEx$table$PValue>2.995732,]
+signiIn <- ttIn$table[ttIn$table$PValue>2.995732,]
 both_signi <- intersect(rownames(signiIn),rownames(signiEx))
 
 ## Average over replicates, build delta Intron/Exon with error bars (mean+-sd)

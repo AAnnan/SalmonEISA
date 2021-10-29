@@ -271,11 +271,11 @@ scatter_deltas_s3 <- function(delta.cnt,signiEx,signiIn) {
   
   ggplot() + 
     geom_point(data=delta.cnt, mapping=aes(x=dIntron, y=dExon), alpha=0.5, size=1) +
-    geom_point(data=delta.cnt.Sex, mapping=aes(x=dIntron, y=dExon, color = "FDR<0.05\ndExon only\n"), alpha=0.5, size=1) +
-    geom_point(data=delta.cnt.Sin, mapping=aes(x=dIntron, y=dExon, color = "FDR<0.05\ndIntron only\n"), alpha=0.5, size=1) +
-    geom_point(data=delta.cnt.signi, mapping=aes(x=dIntron, y=dExon, color = "FDR<0.05\ndIntron and dExon\n"), alpha=0.7, size=1) +
+    geom_point(data=delta.cnt.Sex, mapping=aes(x=dIntron, y=dExon, color = "adjPval<0.05\ndExon only\n"), alpha=0.5, size=1) +
+    geom_point(data=delta.cnt.Sin, mapping=aes(x=dIntron, y=dExon, color = "adjPval<0.05\ndIntron only\n"), alpha=0.5, size=1) +
+    geom_point(data=delta.cnt.signi, mapping=aes(x=dIntron, y=dExon, color = "adjPval<0.05\ndIntron and dExon\n"), alpha=0.7, size=1) +
     ggtitle(paste0('R = ',corEvI)) +
-    scale_colour_manual(name = NULL, values = c("FDR<0.05\ndExon only\n" = "yellow3", "FDR<0.05\ndIntron only\n" = "green3","FDR<0.05\ndIntron and dExon\n"="red")) +
+    scale_colour_manual(name = NULL, values = c("adjPval<0.05\ndExon only\n" = "yellow3", "adjPval<0.05\ndIntron only\n" = "green3","adjPval<0.05\ndIntron and dExon\n"="red")) +
     theme_light() +
     theme(plot.title=element_text(size=12, face="italic", margin = margin(t=40, b = -38)))
 }
