@@ -93,18 +93,18 @@ get_deltas <- function(cnt,logBefore=TRUE) {
   covEx <- RowCov(cnt[,1:4],cnt[,5:8])
   covIn <- RowCov(cnt[,9:12],cnt[,13:16])
   
-  sd.dIntron <- sqrt(((cntIn.366/cntIn.382)^2)*((varIn.366/(cntIn.366^2))+(varIn.382/(cntIn.382^2))-2*(covIn/(cntIn.366*cntIn.382))))
-  sd.dExon <- sqrt(((cntEx.366/cntEx.382)^2)*((varEx.366/(cntEx.366^2))+(varEx.382/(cntEx.382^2))-2*(covEx/(cntEx.366*cntEx.382))))
+  sd.dIntron <- sqrt(((cntIn.382/cntIn.366)^2)*((varIn.366/(cntIn.366^2))+(varIn.382/(cntIn.382^2))-2*(covIn/(cntIn.366*cntIn.382))))
+  sd.dExon <- sqrt(((cntEx.382/cntEx.366)^2)*((varEx.366/(cntEx.366^2))+(varEx.382/(cntEx.382^2))-2*(covEx/(cntEx.366*cntEx.382))))
   
-  dExon <- cntEx.366/cntEx.382
-  dIntron <- cntIn.366/cntIn.382
+  dExon <- cntEx.382/cntEx.366
+  dIntron <- cntIn.382/cntIn.366
   
   if(logBefore) {
     sd.dIntron <- sqrt(varIn.366+varIn.382)
     sd.dExon <- sqrt(varEx.366+varEx.382)
     
-    dExon <- cntEx.366-cntEx.382
-    dIntron <- cntIn.366-cntIn.382
+    dExon <- cntEx.382-cntEx.366
+    dIntron <- cntIn.382-cntIn.366
   }
   
   delta.cnt <- data.frame(dExon=dExon,
@@ -246,11 +246,36 @@ scatter_deltas <- function(delta.cnt,delta.cnt.signi) {
   
   ggplot() + 
     geom_point(data=delta.cnt, mapping=aes(x=dIntron, y=dExon), alpha=0.5) +
-    geom_point(data=delta.cnt.signi, mapping=aes(x=dIntron, y=dExon, color = "FDR<0.05\nfor dIntron & dExon"), alpha=0.75) +
+    geom_point(data=delta.cnt.signi, mapping=aes(x=dIntron, y=dExon, color = "FDR<0.05\nfor dIntron or dExon"), alpha=0.75) +
     ggtitle(paste0('R = ',corEvI), subtitle = paste0('R = ',corEvI.signi)) +
-    scale_colour_manual(name = NULL, values = c("FDR<0.05\nfor dIntron & dExon" = "red")) +
+    scale_colour_manual(name = NULL, values = c("FDR<0.05\nfor dIntron or dExon" = "red")) +
     theme_light() +
     theme(plot.title=element_text(size=12, face="italic", margin = margin(t=40, b = -38)),
-          plot.subtitle=element_text(size=12, face="italic", color="red", margin = margin(t=40, b = -35))) +
-    lims(x = c(-2, 2), y = c(-2, 2))
+          plot.subtitle=element_text(size=12, face="italic", color="red", margin = margin(t=40, b = -35)))# +lims(x = c(-2, 2), y = c(-2, 2))
+}
+
+scatter_deltas_s3 <- function(delta.cnt,signiEx,signiIn) {
+  `%notin%` <- Negate(`%in%`)
+  corEvI <- round(cor(delta.cnt$dIntron,delta.cnt$dExon), 3)
+  both_signi <- intersect(rownames(signiIn),rownames(signiEx))
+  signiIn <- signiIn[rownames(signiIn) %notin% both_signi,]
+  signiEx <- signiEx[rownames(signiEx) %notin% both_signi,]
+  
+  delta.cnt.Sin <- delta.cnt[rownames(delta.cnt) %in% rownames(signiIn),]
+  delta.cnt.Sex <- delta.cnt[rownames(delta.cnt) %in% rownames(signiEx),]
+  delta.cnt.signi <- delta.cnt[rownames(delta.cnt) %in% both_signi,]
+  
+  delta.cnt <- delta.cnt[(rownames(delta.cnt) %notin% rownames(delta.cnt.Sin)),]
+  delta.cnt <- delta.cnt[(rownames(delta.cnt) %notin% rownames(delta.cnt.Sex)),]
+  delta.cnt <- delta.cnt[(rownames(delta.cnt) %notin% rownames(delta.cnt.signi)),]
+  
+  ggplot() + 
+    geom_point(data=delta.cnt, mapping=aes(x=dIntron, y=dExon), alpha=0.5, size=1.2) +
+    geom_point(data=delta.cnt.Sex, mapping=aes(x=dIntron, y=dExon, color = "adjPval<0.05\ndExon only\n"), alpha=0.5, size=1.2) +
+    geom_point(data=delta.cnt.Sin, mapping=aes(x=dIntron, y=dExon, color = "adjPval<0.05\ndIntron only\n"), alpha=0.5, size=1.2) +
+    geom_point(data=delta.cnt.signi, mapping=aes(x=dIntron, y=dExon, color = "adjPval<0.05\ndIntron and dExon\n"), alpha=0.7, size=1.2) +
+    ggtitle(paste0('R = ',corEvI)) +
+    scale_colour_manual(name = NULL, values = c("adjPval<0.05\ndExon only\n" = "yellow3", "adjPval<0.05\ndIntron only\n" = "green3","adjPval<0.05\ndIntron and dExon\n"="red")) +
+    theme_light() +
+    theme(plot.title=element_text(size=12, face="italic", margin = margin(t=40, b = -38)))
 }
