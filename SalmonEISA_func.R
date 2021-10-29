@@ -67,6 +67,16 @@ get_names <- function(cnt, geneIDs_in_both, path_table, chrom="all") {
 
 
 #### Manipulations ####
+sel_X <- function(rnaseq,gene.table) {
+  gene.table <- read.delim2(gene.table)
+  rownames(gene.table) <- gene.table[,1]
+  gene.table <- gene.table[gene.table$Chromosome.scaffold.name=='X',]
+  ge <- gene.table$Gene.name[match(rownames(rnaseq), gene.table$Gene.name)]
+  rnaseq <- rnaseq[!is.na(ge),]
+  rownames(rnaseq) <- na.omit(ge)
+  return(rnaseq)
+}
+
 #' From normalized counts, build a df with counts averaged among replicates
 #' 
 #' @param cnt A normalized count df with gene names as rownames and 16 columns:
@@ -278,4 +288,40 @@ scatter_deltas_s3 <- function(delta.cnt,signiEx,signiIn) {
     scale_colour_manual(name = NULL, values = c("adjPval<0.05\ndExon only\n" = "yellow3", "adjPval<0.05\ndIntron only\n" = "green3","adjPval<0.05\ndIntron and dExon\n"="red")) +
     theme_light() +
     theme(plot.title=element_text(size=12, face="italic", margin = margin(t=40, b = -38)))
+}
+
+scatter_deltas_X <- function(delta.cnt,delta.cnt_X) {
+  `%notin%` <- Negate(`%in%`)
+  corEvI <- round(cor(delta.cnt$dIntron,delta.cnt$dExon), 3)
+  corEvI_X <- round(cor(delta.cnt_X$dIntron,delta.cnt_X$dExon), 3)
+  
+  delta.cnt <- delta.cnt[(rownames(delta.cnt) %notin% rownames(delta.cnt_X)),]
+
+  ggplot() + 
+    geom_point(data=delta.cnt, mapping=aes(x=dIntron, y=dExon), alpha=0.5, size=1) +
+    geom_point(data=delta.cnt_X, mapping=aes(x=dIntron, y=dExon, color = "X genes"), alpha=0.5, size=1) +
+    ggtitle(paste0('R = ',corEvI), subtitle = paste0('R (X) = ',corEvI_X)) +
+    scale_colour_manual(name = NULL, values = c("X genes"="red")) +
+    theme_light() +
+    theme(plot.title=element_text(size=12, face="italic", margin = margin(t=40, b = -38)),
+          plot.subtitle=element_text(size=12, face="italic", color="red", margin = margin(t=40, b = -35)))
+  
+}
+
+scatter_simple <- function(cnt,cnt_X) {
+  `%notin%` <- Negate(`%in%`)
+  corEvI <- round(cor(cnt$Intron,cnt$Exon), 3)
+  corEvI_X <- round(cor(cnt_X$Intron,cnt_X$Exon), 3)
+
+  cnt <- cnt[(rownames(cnt) %notin% rownames(cnt_X)),]
+  
+  ggplot() + 
+    geom_point(data=cnt, mapping=aes(x=Intron, y=Exon), alpha=0.5, size=1) +
+    geom_point(data=cnt_X, mapping=aes(x=Intron, y=Exon, color = "X genes"), alpha=0.5, size=1) +
+    ggtitle(paste0('R = ',corEvI), subtitle = paste0('R (X) = ',corEvI_X)) +
+    scale_colour_manual(name = NULL, values = c("X genes"="red")) +
+    theme_light() +
+    theme(plot.title=element_text(size=12, face="italic", margin = margin(t=40, b = -38)),
+          plot.subtitle=element_text(size=12, face="italic", color="red", margin = margin(t=40, b = -35)))
+  
 }

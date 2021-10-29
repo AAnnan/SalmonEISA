@@ -34,8 +34,8 @@ cntEx <- get_cnt(txFile)
 #cntIn <- na.omit(cntIn)
 
 genes.in.both <- intersect(rownames(cntEx),rownames(cntIn))
-cntIn <- get_names(cntIn, genes.in.both, gene_table, chrom="X")
-cntEx <- get_names(cntEx, genes.in.both, gene_table, chrom="X")
+cntIn <- get_names(cntIn, genes.in.both, gene_table, chrom="all")
+cntEx <- get_names(cntEx, genes.in.both, gene_table, chrom="all")
 
 # find genes with sufficient exonic and intronic counts (genes.sel)
 cntEx.norm <- as.data.frame(t(mean(colSums(cntEx))*t(cntEx)/colSums(cntEx))) # normalize samples to avearge sequencing depth for exons
@@ -95,11 +95,22 @@ tt.df.ex <- data.frame(ttEx)
 delta.cnt.edgeR <- data.frame(row.names = rownames(tt.df.ex[order(row.names(tt.df.ex)),]),dExon=tt.df.ex$logFC[order(row.names(tt.df.ex))], dIntron=tt.df.in$logFC[order(row.names(tt.df.in))]) 
 delta.cnt.edgeR.signi <- delta.cnt.edgeR[rownames(delta.cnt.edgeR) %in% both_signi,]
 
+### SINGLE SAMPLE
+wt_cnt <- log2(data.frame(Exon=rowMeans(cnt.norm[,c(1:4)]), Intron=rowMeans(cnt.norm[,c(9:12)])))
+dpy26_cnt <- log2(data.frame(Exon=rowMeans(cnt.norm[,c(5:8)]), Intron=rowMeans(cnt.norm[,c(12:15)])))
+wt_cnt_X <- sel_X(wt_cnt,gene_table)
+dpy26_cnt_X <- sel_X(dpy26_cnt,gene_table)
+scatter_simple(wt_cnt,wt_cnt_X)
+scatter_simple(dpy26_cnt,dpy26_cnt_X)
+
 ##Plots
 
 #scatter_deltas(delta.cnt.edgeR,delta.cnt.edgeR.signi)
 #scatter_deltas(delta.cnt,delta.cnt.signi)
-scatter_deltas_s3(delta.cnt.edgeR,signiEx,signiIn)
+
+delta.cnt.edgeR_X <- sel_X(delta.cnt.edgeR,gene_table)
+scatter_deltas_X(delta.cnt.edgeR,delta.cnt.edgeR_X)
+#scatter_deltas_s3(delta.cnt.edgeR,signiEx,signiIn)
 
 #Looking for specific genes
 delta.cnt.signi[delta.cnt.signi$dIntron< -2 & delta.cnt.signi$dExon> -1 ,]
