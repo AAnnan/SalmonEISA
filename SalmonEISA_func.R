@@ -298,30 +298,36 @@ scatter_deltas_X <- function(delta.cnt,delta.cnt_X) {
   delta.cnt <- delta.cnt[(rownames(delta.cnt) %notin% rownames(delta.cnt_X)),]
 
   ggplot() + 
-    geom_point(data=delta.cnt, mapping=aes(x=dIntron, y=dExon), alpha=0.5, size=1) +
+    geom_point(data=delta.cnt, mapping=aes(x=dIntron, y=dExon, color = "Autosomal genes"), alpha=0.5, size=1) +
     geom_point(data=delta.cnt_X, mapping=aes(x=dIntron, y=dExon, color = "X genes"), alpha=0.5, size=1) +
-    ggtitle(paste0('R = ',corEvI), subtitle = paste0('R (X) = ',corEvI_X)) +
-    scale_colour_manual(name = NULL, values = c("X genes"="red")) +
+    ggtitle(paste0("WT - dpy26",'\nR = ',corEvI), subtitle = paste0('R (X) = ',corEvI_X)) +
+    scale_colour_manual(name = NULL, values = c("X genes"="red","Autosomal genes"="black")) +
     theme_light() +
+    coord_fixed() + 
     theme(plot.title=element_text(size=12, face="italic", margin = margin(t=40, b = -38)),
-          plot.subtitle=element_text(size=12, face="italic", color="red", margin = margin(t=40, b = -35)))
+          plot.subtitle=element_text(size=12, face="italic", color="red", margin = margin(t=40, b = -35))) + 
+    geom_segment(aes(x =-3.2, y = -3.2,xend = 9.3, yend = 9.3))
   
 }
 
-scatter_simple <- function(cnt,cnt_X) {
+scatter_simple <- function(cnt,cnt_X,cond) {
+  cnt <- cnt[is.finite(rowSums(cnt)),]
+  cnt_X <- cnt_X[is.finite(rowSums(cnt_X)),]
+  
   `%notin%` <- Negate(`%in%`)
-  corEvI <- round(cor(cnt$Intron,cnt$Exon), 3)
-  corEvI_X <- round(cor(cnt_X$Intron,cnt_X$Exon), 3)
+  corEvI <- round(cor(cnt$log2_norm_Intron,cnt$log2_norm_Exon), 3)
+  corEvI_X <- round(cor(cnt_X$log2_norm_Intron,cnt_X$log2_norm_Exon), 3)
 
   cnt <- cnt[(rownames(cnt) %notin% rownames(cnt_X)),]
   
   ggplot() + 
-    geom_point(data=cnt, mapping=aes(x=Intron, y=Exon), alpha=0.5, size=1) +
-    geom_point(data=cnt_X, mapping=aes(x=Intron, y=Exon, color = "X genes"), alpha=0.5, size=1) +
-    ggtitle(paste0('R = ',corEvI), subtitle = paste0('R (X) = ',corEvI_X)) +
+    geom_point(data=cnt, mapping=aes(x=log2_norm_Intron, y=log2_norm_Exon), alpha=0.5, size=1) +
+    geom_point(data=cnt_X, mapping=aes(x=log2_norm_Intron, y=log2_norm_Exon, color = "X genes"), alpha=0.5, size=1) +
+    ggtitle(paste0(cond,'\nR = ',corEvI), subtitle = paste0('R (X) = ',corEvI_X)) +
     scale_colour_manual(name = NULL, values = c("X genes"="red")) +
     theme_light() +
-    theme(plot.title=element_text(size=12, face="italic", margin = margin(t=40, b = -38)),
-          plot.subtitle=element_text(size=12, face="italic", color="red", margin = margin(t=40, b = -35)))
+    coord_fixed() +
+    theme(plot.title=element_text(size=13, face="italic", margin = margin(t=40, b = -38)),
+          plot.subtitle=element_text(size=10, face="italic", color="red", margin = margin(t=40, b = -35)))
   
 }
