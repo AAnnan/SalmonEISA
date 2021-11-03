@@ -23,7 +23,7 @@ echo "Building Feature->GeneID correspondance table"
 
 # Extract the gene/transcript number and its corresponding gene ID
 grep '>' c_elegans.PRJNA13758.WS279.mRNA_transcripts.fa | sed 's/>//g' | sed 's/gene=//g' > gene_tx_list.txt
-grep '>' CE_genes_seq.fa | sed 's/>//g' | sed 's/Gene://g' > gene_gen_list.txt
+grep '>' CE_genes_seq.fa | sed 's/>//g' > gene_gen_list.txt
 
 
 ### Build read count columns by sample / replicate
