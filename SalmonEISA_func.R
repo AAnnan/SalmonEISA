@@ -260,6 +260,7 @@ scatter_deltas <- function(delta.cnt,delta.cnt.signi) {
     ggtitle(paste0('R = ',corEvI), subtitle = paste0('R = ',corEvI.signi)) +
     scale_colour_manual(name = NULL, values = c("FDR<0.05\nfor dIntron or dExon" = "red")) +
     theme_light() +
+    coord_fixed() +
     theme(plot.title=element_text(size=12, face="italic", margin = margin(t=40, b = -38)),
           plot.subtitle=element_text(size=12, face="italic", color="red", margin = margin(t=40, b = -35)))# +lims(x = c(-2, 2), y = c(-2, 2))
 }
@@ -287,15 +288,17 @@ scatter_deltas_s3 <- function(delta.cnt,signiEx,signiIn) {
     ggtitle(paste0('R = ',corEvI)) +
     scale_colour_manual(name = NULL, values = c("adjPval<0.05\ndExon only\n" = "yellow3", "adjPval<0.05\ndIntron only\n" = "green3","adjPval<0.05\ndIntron and dExon\n"="red")) +
     theme_light() +
+    coord_fixed() +
     theme(plot.title=element_text(size=12, face="italic", margin = margin(t=40, b = -38)))
 }
 
 scatter_deltas_X <- function(delta.cnt,delta.cnt_X) {
   `%notin%` <- Negate(`%in%`)
-  corEvI <- round(cor(delta.cnt$dIntron,delta.cnt$dExon), 3)
+  
   corEvI_X <- round(cor(delta.cnt_X$dIntron,delta.cnt_X$dExon), 3)
   
   delta.cnt <- delta.cnt[(rownames(delta.cnt) %notin% rownames(delta.cnt_X)),]
+  corEvI <- round(cor(delta.cnt$dIntron,delta.cnt$dExon), 3)
 
   ggplot() + 
     geom_point(data=delta.cnt, mapping=aes(x=dIntron, y=dExon, color = "Autosomal genes"), alpha=0.5, size=1) +
@@ -329,5 +332,25 @@ scatter_simple <- function(cnt,cnt_X,cond) {
     coord_fixed() +
     theme(plot.title=element_text(size=13, face="italic", margin = margin(t=40, b = -38)),
           plot.subtitle=element_text(size=10, face="italic", color="red", margin = margin(t=40, b = -35)))
+  
+}
+
+gro_scatter <- function(cnt,gro_cnt) {
+  
+  inboth <- intersect(rownames(cnt),rownames(gro_cnt))
+  cnt <- cnt[rownames(cnt) %in% inboth,]
+  gro_cnt <- gro_cnt[rownames(gro_cnt) %in% inboth,]
+  
+  gro_gro <- data.frame(GROseq_N2_sdc2RNAi=gro_cnt,dIntron_WT_dpy26cs=cnt)
+  
+  corEvI <- round(cor(gro_gro$GROseq_N2_sdc2RNAi,gro_gro$dIntron_WT_dpy26cs), 3)
+
+  
+  ggplot() + 
+    geom_point(data=gro_gro, mapping=aes(x=GROseq_N2_sdc2RNAi, y=dIntron_WT_dpy26cs), alpha=0.5, size=1) +
+    ggtitle(paste0('\nR = ',corEvI)) +
+    theme_light() +
+    coord_fixed() +
+    theme(plot.title=element_text(size=13, face="italic", margin = margin(t=40, b = -38)))
   
 }

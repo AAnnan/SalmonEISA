@@ -9,81 +9,133 @@ source("/Users/aa/Documents/GitHub/SalmonEISA/SalmonEISA_func.R")
 
 # input files and parameters
 gene_table <- "wormbase/c_elegans.PRJNA13758.WS279.TableGeneIDs.tsv"
-txFile <- "rawcounts/15_10_GT/rawcounts_transcript.txt"
-geFile <- "rawcounts/15_10_GT/rawcounts_gene.txt"
-#conditions <- c("366","366","366","366","382","382","382","382")
-conditions <- c("WT","WT","WT","WT","dpy26cs","dpy26cs","dpy26cs","dpy26cs")
+txFile <- "rawcounts/kruezi2013_norep/rawcounts_transcript.txt"
+geFile <- "rawcounts/kruezi2013_norep/rawcounts_gene.txt"
+
+gro_txFile <- "rawcounts/kruezi2013_rep/rawcounts_transcript_gro.txt"
+gro_geFile <- "rawcounts/kruezi2013_rep/rawcounts_gene_gro.txt"
+
+#gro_txFile <- "rawcounts/kruezi2013_norep/rawcounts_transcript_gro.txt"
+#gro_geFile <- "rawcounts/kruezi2013_norep/rawcounts_gene_gro.txt"
+
+prepoc_cnt <- function(geFile, txFile, gene_table) {
+  # read in count tables
+  cntIn <- get_cnt(geFile)
+  # aggregate the read counts from transcripts to genes
+  cntEx <- get_cnt(txFile)
+  
+  genes.in.both <- intersect(rownames(cntEx),rownames(cntIn))
+  cntIn <- get_names(cntIn, genes.in.both, gene_table, chrom="all")
+  cntEx <- get_names(cntEx, genes.in.both, gene_table, chrom="all")
+  #all(rownames(cntIn)==rownames(cntEx))
+  
+  # find genes with sufficient exonic and intronic counts (genes.sel)
+  cntEx.norm <- as.data.frame(t(mean(colSums(cntEx))*t(cntEx)/colSums(cntEx))) # normalize samples to avearge sequencing depth for exons
+  cntIn.norm <- as.data.frame(t(mean(colSums(cntIn))*t(cntIn)/colSums(cntIn))) # normalize samples to avearge sequencing depth for introns
+  
+  #genes.sel <- rowMeans(log2(cntEx.norm+8))>=4.321928 & rowMeans(log2(cntIn.norm+8))>=4.321928 #20 (12)
+  genes.sel <- rowMeans(log2(cntEx.norm+8))>=5 & rowMeans(log2(cntIn.norm+8))>=5 #32(24)
+  
+  # Keep counts only of genes with sufficient exonic and intronic counts (genes.sel)
+  cntEx <- cntEx[genes.sel,]
+  cntIn <- cntIn[genes.sel,]
+  return(list(cntEx,cntIn))
+}
+
+cnt2 <- prepoc_cnt(geFile, txFile, gene_table)
+cntEx <- data.frame(cnt2[1])
+cntIn <- data.frame(cnt2[2])
 
 # read in count tables
-cntIn <- get_cnt(geFile)
-#cntIn <- read.delim(geFile, row.names = 1)
+gro_cntIn <- get_cnt(gro_geFile)
 # aggregate the read counts from transcripts to genes
-cntEx <- get_cnt(txFile)
+gro_cntEx <- get_cnt(gro_txFile)
 
-# Get rid of genes existing only in 1 count table
-# Change Gene_IDs to gene names
-#genes.in.both <- intersect(rownames(cntEx),rownames(cntGe))
-#cntGe <- cntGe[rownames(cntGe) %in% genes.in.both,]
-#cntEx <- cntEx[rownames(cntEx) %in% genes.in.both,]
+gro_genes.in.both <- intersect(rownames(gro_cntEx),rownames(gro_cntIn))
+gro_cntIn <- get_names(gro_cntIn, gro_genes.in.both, gene_table, chrom="all")
+gro_cntEx <- get_names(gro_cntEx, gro_genes.in.both, gene_table, chrom="all")
+all(rownames(gro_cntIn)==rownames(gro_cntEx))
 
-#cntGe <- cntGe[ order(row.names(cntGe)), ]
-#cntEx <- cntEx[ order(row.names(cntEx)), ]
-
-#cntIn <- cntGe - cntEx
-#cntIn[cntIn < 0] <- NA
-#cntIn <- na.omit(cntIn)
-
-genes.in.both <- intersect(rownames(cntEx),rownames(cntIn))
-cntIn <- get_names(cntIn, genes.in.both, gene_table, chrom="all")
-cntEx <- get_names(cntEx, genes.in.both, gene_table, chrom="all")
-#all(rownames(cntIn)==rownames(cntEx))
-cntAll <- cbind(cntEx,cntIn)
-
+gro_cnt <- gro_cntEx + gro_cntIn
 # find genes with sufficient exonic and intronic counts (genes.sel)
-cntEx.norm <- as.data.frame(t(mean(colSums(cntEx))*t(cntEx)/colSums(cntEx))) # normalize samples to avearge sequencing depth for exons
-cntIn.norm <- as.data.frame(t(mean(colSums(cntIn))*t(cntIn)/colSums(cntIn))) # normalize samples to avearge sequencing depth for introns
-cntAll.norm  <- as.data.frame(t(mean(colSums(cntAll))*t(cntAll)/colSums(cntAll)))
+gro_cnt.norm <- as.data.frame(t(mean(colSums(gro_cnt))*t(gro_cnt)/colSums(gro_cnt))) # normalize samples to avearge sequencing depth for exons
 
-genes.sel <- rowMeans(log2(cntEx.norm+8))>=4.321928 & rowMeans(log2(cntIn.norm+8))>=4.321928 #20 (12)
-genesAll.sel <- rowMeans(log2(cntAll.norm+8))>=4.321928
-#genes.sel <- rowMeans(log2(cntEx.norm+8))>=5 & rowMeans(log2(cntIn.norm+8))>=5 #32(24)
-
-# combine exon and intron raw counts for edgeR containing genes with sufficient counts in both exonic and intronic levels
-cnt.norm <- cbind(Ex=cntEx.norm[genes.sel,], In=cntIn.norm[genes.sel,])
-cntAll.norm <- cntAll.norm[genesAll.sel,]
-#cnt.norm.norm <- as.data.frame(t(mean(colSums(cnt.norm))*t(cnt.norm)/colSums(cnt.norm)))
-#cnt <- cbind(Ex=cntEx[genes.sel,], In=cntIn[genes.sel,])
+#gro_genes.sel <- rowMeans(log2(gro_cnt.norm+8))>=4.321928 #20 (12)
+gro_genes.sel <- rowMeans(log2(gro_cnt.norm+8))>=5 #32 (24)
 
 # Keep counts only of genes with sufficient exonic and intronic counts (genes.sel)
-cntEx <- cntEx[genes.sel,]
-cntIn <- cntIn[genes.sel,]
-
+gro_cnt <- gro_cnt[gro_genes.sel,]
+gro_cnt.norm <- gro_cnt.norm[gro_genes.sel,]
 
 # edgeR workflow
+#conditions <- c("366","366","366","366","382","382","382","382")
+conditions <- c("WT","WT","WT","WT","dpy26cs","dpy26cs","dpy26cs","dpy26cs")
 factorCondition <- factor(conditions, levels=unique(conditions)) # define experimental factor 'conditions'
 group <- c(1,1,1,1,2,2,2,2)
 
-##Exons
-yEx <- DGEList(counts=cntEx, genes=rownames(cntEx), group=group) # define DGEList object
-yEx <- calcNormFactors(yEx) # determine normalization factors
-designEx <- model.matrix(~ factorCondition) # design matrix
-rownames(designEx) <- colnames(cntEx)
-yEx <- estimateDisp(yEx, designEx) # estimate dispersion
-fitEx <- glmFit(yEx, designEx) # fit generalized linear model
-lrtEx <- glmLRT(fitEx) # calculate likelihood-ratio between full and reduced models
-ttEx <- topTags(lrtEx, n=nrow(yEx)) #final table with significance level for each gene 
-head(ttEx$table)
+gro_conditions <- c("WT", "WT","sdc2RNAi","sdc2RNAi")
+gro_factorCondition <- factor(gro_conditions, levels=unique(gro_conditions)) # define experimental factor 'conditions'
+gro_group <- c(1,1,2,2)
 
-##Introns
-yIn <- DGEList(counts=cntIn, genes=rownames(cntIn), group=group) # define DGEList object
-yIn <- calcNormFactors(yIn) # determine normalization factors
-designIn <- model.matrix(~ factorCondition) # design matrix
-rownames(designIn) <- colnames(cntIn)
-yIn <- estimateDisp(yIn, designIn) # estimate dispersion
-fitIn <- glmFit(yIn, designIn) # fit generalized linear model
-lrtIn <- glmLRT(fitIn) # calculate likelihood-ratio between full and reduced models
-ttIn <- topTags(lrtIn, n=nrow(yIn)) #final table with significance level for each gene 
-head(ttIn$table)
+edgeR_flow <- function(cntEx, cntIn, groupE, factorConditionE) {
+  ##Exons
+  yEx <- DGEList(counts=cntEx, genes=rownames(cntEx), group=groupE) # define DGEList object
+  yEx <- calcNormFactors(yEx) # determine normalization factors
+  designEx <- model.matrix(~ factorConditionE) # design matrix
+  rownames(designEx) <- colnames(cntEx)
+  yEx <- estimateDisp(yEx, designEx) # estimate dispersion
+  fitEx <- glmFit(yEx, designEx) # fit generalized linear model
+  lrtEx <- glmLRT(fitEx) # calculate likelihood-ratio between full and reduced models
+  ttEx <- topTags(lrtEx, n=nrow(yEx)) #final table with significance level for each gene 
+  
+  ##Introns
+  yIn <- DGEList(counts=cntIn, genes=rownames(cntIn), group=groupE) # define DGEList object
+  yIn <- calcNormFactors(yIn) # determine normalization factors
+  designIn <- model.matrix(~ factorConditionE) # design matrix
+  rownames(designIn) <- colnames(cntIn)
+  yIn <- estimateDisp(yIn, designIn) # estimate dispersion
+  fitIn <- glmFit(yIn, designIn) # fit generalized linear model
+  lrtIn <- glmLRT(fitIn) # calculate likelihood-ratio between full and reduced models
+  ttIn <- topTags(lrtIn, n=nrow(yIn)) #final table with significance level for each gene 
+
+  return(list(ttEx,ttIn))
+}
+
+tt2 <- edgeR_flow(cntEx, cntIn, group, factorCondition)
+ttEx <- data.frame(tt2[1])
+ttIn <- data.frame(tt2[2])
+
+##GRO
+gro_y <- DGEList(counts=gro_cnt, genes=rownames(gro_cnt), group=gro_group) # define DGEList object
+gro_y <- calcNormFactors(gro_y) # determine normalization factors
+gro_design <- model.matrix(~ gro_factorCondition) # design matrix
+rownames(gro_design) <- colnames(gro_cnt)
+gro_y <- estimateDisp(gro_y, gro_design) # estimate dispersion
+gro_fit <- glmFit(gro_y, gro_design) # fit generalized linear model
+gro_lrt <- glmLRT(gro_fit) # calculate likelihood-ratio between full and reduced models
+gro_tt <- topTags(gro_lrt, n=nrow(gro_y)) #final table with significance level for each gene 
+
+
+
+
+tt.df.in <- data.frame(ttIn)
+tt.df.ex <- data.frame(ttEx)
+delta.cnt.edgeR <- data.frame(row.names = rownames(tt.df.ex[order(row.names(tt.df.ex)),]),dExon=tt.df.ex$logFC[order(row.names(tt.df.ex))], dIntron=tt.df.in$logFC[order(row.names(tt.df.in))]) 
+forgro_delta.cnt.edgeR <- data.frame(row.names = rownames(tt.df.ex[order(row.names(tt.df.ex)),]),dIntron_WT_dpy26cs=tt.df.in$logFC[order(row.names(tt.df.in))]) 
+
+gro.tt.df <- data.frame(gro_tt)
+gro.delta.cnt.edgeR <- data.frame(row.names = rownames(gro.tt.df[order(row.names(gro.tt.df)),]),GROseq_N2_sdc2RNAi=gro.tt.df$logFC[order(row.names(gro.tt.df))]) 
+
+gro_scatter(forgro_delta.cnt.edgeR,gro.delta.cnt.edgeR)
+
+
+gro_delta <- data.frame(names = rownames(gro_cnt.norm),GROseq_N2_sdc2RNAi=log2(gro_cnt.norm$GROseq_sdc2/gro_cnt.norm$N2_GROseq_ctrl))
+gro_delta <- gro_delta[is.finite(gro_delta$GROseq_N2_sdc2RNAi),]
+rownames(gro_delta) <- gro_delta$names
+gro_delta$names <- NULL
+gro_scatter(forgro_delta.cnt.edgeR,gro_delta)
+
+
 
 ## Select genes with significant delta Intron/Exon (False Discovery rate inferior than 5%)
 ttEx$table$PValue <- -log(p.adjust(ttEx$table$PValue, method = "BH"))
@@ -91,36 +143,9 @@ ttIn$table$PValue <- -log(p.adjust(ttIn$table$PValue, method = "BH"))
 signiEx <- ttEx$table[ttEx$table$PValue>2.995732,]
 signiIn <- ttIn$table[ttIn$table$PValue>2.995732,]
 both_signi <- intersect(rownames(signiIn),rownames(signiEx))
-
-## Average over replicates, build delta Intron/Exon with error bars (mean+-sd)
-delta.cnt <- get_deltas(cnt.norm,logBefore=TRUE)
-delta.cnt.signi <- delta.cnt[rownames(delta.cnt) %in% both_signi,] #Select significant genes
-
-tt.df.in <- data.frame(ttIn)
-tt.df.ex <- data.frame(ttEx)
-delta.cnt.edgeR <- data.frame(row.names = rownames(tt.df.ex[order(row.names(tt.df.ex)),]),dExon=tt.df.ex$logFC[order(row.names(tt.df.ex))], dIntron=tt.df.in$logFC[order(row.names(tt.df.in))]) 
 delta.cnt.edgeR.signi <- delta.cnt.edgeR[rownames(delta.cnt.edgeR) %in% both_signi,]
 
-### SINGLE SAMPLE
-wt_cnt <- log2(data.frame(log2_norm_Exon=rowMeans(cnt.norm[,c(1:4)]), log2_norm_Intron=rowMeans(cnt.norm[,c(9:12)])))
-dpy26_cnt <- log2(data.frame(log2_norm_Exon=rowMeans(cnt.norm[,c(5:8)]), log2_norm_Intron=rowMeans(cnt.norm[,c(12:15)])))
-wt_cnt_X <- sel_X(wt_cnt,gene_table)
-dpy26_cnt_X <- sel_X(dpy26_cnt,gene_table)
-
-wt_cnt.norm <- log2(data.frame(log2_norm_Exon=rowMeans(cntAll.norm[,c(1:4)]), log2_norm_Intron=rowMeans(cntAll.norm[,c(9:12)])))
-dpy26_cnt.norm <- log2(data.frame(log2_norm_Exon=rowMeans(cntAll.norm[,c(5:8)]), log2_norm_Intron=rowMeans(cntAll.norm[,c(12:15)])))
-wt_cnt_X.norm <- sel_X(wt_cnt.norm,gene_table)
-dpy26_cnt_X.norm <- sel_X(dpy26_cnt.norm,gene_table)
-
-scatter_simple(wt_cnt,wt_cnt_X,"WT")
-scatter_simple(wt_cnt.norm,wt_cnt_X.norm,"WT - All Normalized")
-scatter_simple(dpy26_cnt,dpy26_cnt_X,"dpy26cs")
-scatter_simple(dpy26_cnt.norm,dpy26_cnt_X.norm,"dpy26cs - All Normalized")
-
 ##Plots
-
-#scatter_deltas(delta.cnt.edgeR,delta.cnt.edgeR.signi)
-#scatter_deltas(delta.cnt,delta.cnt.signi)
 
 delta.cnt.edgeR_X <- sel_X(delta.cnt.edgeR,gene_table)
 scatter_deltas_X(delta.cnt.edgeR,delta.cnt.edgeR_X)
@@ -133,14 +158,3 @@ delta.cnt.signi[rownames(delta.cnt.signi) == "sep-1",]
 cntEx.norm[rownames(cntEx.norm) == "sep-1",]
 cntIn.norm[rownames(cntIn.norm) == "sep-1",]
 
-#plot_col_deltas(delta.cnt)
-#plot_col_deltas(delta.cnt.signi)
-
-#redHabach <-intersect(rownames(ttEx$table[ttEx$table$logFC>1,]),rownames(ttIn$table[abs(ttIn$table$logFC)<1,]))
-#delta.cnt.signi <- delta.cnt[rownames(delta.cnt) %in% redHabach,]
-
-## Average over replicates, build mean Intron/Exon counts with error bars (mean+-sd)
-#mean.cnt <- get_means(cnt.norm)
-#mean.cnt.signi <- mean.cnt[rownames(mean.cnt) %in% both_signi,] #Select significant genes
-#plot_col_means(mean.cnt)
-#plot_col_means(mean.cnt.signi)
