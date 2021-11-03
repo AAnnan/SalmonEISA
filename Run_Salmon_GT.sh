@@ -19,7 +19,7 @@ salmon index -t CE_gentrome.fa -i EISA_index --decoys decoys.txt -k 19
 
 ########################################################################################################################
 ########################################################################################################################
-data=/scratch/aannan/Kruezi2013
+data=/scratch/aannan/Kruezi2013/data
 
 #366 b 2020
 faN2_GROseq_ctrl_1=${data}/GSM1056279_GRO-seq_N2_Emb/SRR639125.fastq
@@ -32,8 +32,11 @@ faGROseq_sdc2_2=${data}/GSM1056281_GRO-seq_y93.sdc2RNAi_Emb/SRR639130.fastq
 ########################################################################################################################
 
 #366 b 2020
-salmon quant -i EISA_index -l A -r ${faN2_GROseq_ctrl_1} ${faN2_GROseq_ctrl_2} --validateMappings -p 20 -o salmon_out/N2_GROseq_ctrl --seqBias --gcBias --numBootstraps 100
-salmon quant -i EISA_index -l A -r ${faGROseq_sdc2_1} ${faGROseq_sdc2_2} --validateMappings -p 20 -o salmon_out/GROseq_sdc2 --seqBias --gcBias --numBootstraps 100
+salmon quant -i EISA_index -l A -r ${faN2_GROseq_ctrl_1} --validateMappings -p 20 -o salmon_out/N2_GROseq_ctrl_1 --seqBias --gcBias --numBootstraps 100
+salmon quant -i EISA_index -l A -r ${faN2_GROseq_ctrl_2} --validateMappings -p 20 -o salmon_out/N2_GROseq_ctrl_2 --seqBias --gcBias --numBootstraps 100
+
+salmon quant -i EISA_index -l A -r ${faGROseq_sdc2_1} --validateMappings -p 20 -o salmon_out/GROseq_sdc2_1 --seqBias --gcBias --numBootstraps 100
+salmon quant -i EISA_index -l A -r ${faGROseq_sdc2_2} --validateMappings -p 20 -o salmon_out/GROseq_sdc2_2 --seqBias --gcBias --numBootstraps 100
 
 conda deactivate
 
