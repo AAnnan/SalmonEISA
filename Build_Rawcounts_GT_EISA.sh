@@ -18,15 +18,25 @@ d="salmon_out"
 sample=("366" "382")
 rep=("b1" "b2" "b3" "b4")
 
+gro_sdc2=GROseq_sdc2
+gro_ctrl=N2_GROseq_ctrl
+
 ### Build Feature-Gene correspondance table
 echo "Building Feature->GeneID correspondance table"
 
 # Extract the gene/transcript number and its corresponding gene ID
 grep '>' c_elegans.PRJNA13758.WS279.mRNA_transcripts.fa | sed 's/>//g' | sed 's/gene=//g' > gene_tx_list.txt
-grep '>' CE_genes_seq.fa | sed 's/>//g' > gene_gen_list.txt
+grep '>' CE_genes_seq.fa | sed 's/>//g' | sed 's/Gene://g' > gene_gen_list.txt
 
 
 ### Build read count columns by sample / replicate
+echo "Extracting read count from GROseq"
+echo ${gro_sdc2} > NumReads_gen_${gro_sdc2}.sf && awk 'NR==FNR{a[$1];next} $1 in a{print $5}' gene_gen_list.txt ${d}/${gro_sdc2}/quant.sf >> NumReads_gen_${gro_sdc2}.sf
+echo ${gro_ctrl} > NumReads_gen_${gro_ctrl}.sf && awk 'NR==FNR{a[$1];next} $1 in a{print $5}' gene_gen_list.txt ${d}/${gro_ctrl}/quant.sf >> NumReads_gen_${gro_ctrl}.sf
+
+echo ${gro_sdc2} > NumReads_tx_${gro_sdc2}.sf && awk 'NR==FNR{a[$1];next} $1 in a{print $5}' gene_tx_list.txt ${d}/${gro_sdc2}/quant.sf >> NumReads_tx_${gro_sdc2}.sf
+echo ${gro_ctrl} > NumReads_tx_${gro_ctrl}.sf && awk 'NR==FNR{a[$1];next} $1 in a{print $5}' gene_tx_list.txt ${d}/${gro_ctrl}/quant.sf >> NumReads_tx_${gro_ctrl}.sf
+
 for s in ${sample[@]}; do
 	for r in ${rep[@]}; do
 		echo "Extracting read count from "${s}${r}
@@ -39,12 +49,19 @@ done
 ### Build final raw geneic/transcriptic counts
 echo "Building raw geneic/transcriptic count files"
 
+echo "Gene_IDs" > order_WBGenes_GE_gro && awk 'NR==FNR{a[$1];next} $1 in a{print $1}' ${d}/${gro_sdc2}/quant.sf gene_gen_list.txt >> order_WBGenes_GE_gro
+echo "Gene_IDs" > order_WBGenes_Tx_gro && awk 'NR==FNR{a[$1];next} $1 in a{print $2}' ${d}/${gro_sdc2}/quant.sf gene_tx_list.txt >> order_WBGenes_Tx_gro
+
+
 echo "Gene_IDs" > order_WBGenes_GE && awk 'NR==FNR{a[$1];next} $1 in a{print $1}' ${d}/${s[0]}${r[0]}/quant.sf gene_gen_list.txt >> order_WBGenes_GE
 echo "Gene_IDs" > order_WBGenes_Tx && awk 'NR==FNR{a[$1];next} $1 in a{print $2}' ${d}/${s[0]}${r[0]}/quant.sf gene_tx_list.txt >> order_WBGenes_Tx
 
 # Paste together all the columns
 paste order_WBGenes_Tx NumReads_tx_366b1.sf NumReads_tx_366b2.sf NumReads_tx_366b3.sf NumReads_tx_366b4.sf NumReads_tx_382b1.sf NumReads_tx_382b2.sf NumReads_tx_382b3.sf NumReads_tx_382b4.sf > rawcounts_transcript.txt
 paste order_WBGenes_GE NumReads_gen_366b1.sf NumReads_gen_366b2.sf NumReads_gen_366b3.sf NumReads_gen_366b4.sf NumReads_gen_382b1.sf NumReads_gen_382b2.sf NumReads_gen_382b3.sf NumReads_gen_382b4.sf > rawcounts_gene.txt
+
+paste order_WBGenes_Tx_gro NumReads_tx_${gro_ctrl}.sf NumReads_tx_${gro_sdc2}.sf > rawcounts_transcript_gro.txt
+paste order_WBGenes_GE_gro NumReads_gen_${gro_ctrl}.sf NumReads_gen_${gro_sdc2}.sf > rawcounts_gene_gro.txt
 
 # Clean up
 rm g*_t*_list.txt g*_g*_list.txt
