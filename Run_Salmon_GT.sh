@@ -203,7 +203,7 @@ salmon quant -i EISA_index -l A -1 ${fa821D2_L1_R1} ${fa821D2_L2_R1} -2 ${fa821D
 salmon quant -i EISA_index -l A -1 ${fa821D3_L1_R1} ${fa821D3_L2_R1} -2 ${fa821D3_L1_R2} ${fa821D3_L2_R2} --validateMappings -p 30 -o salmon_out/821D3 --seqBias --gcBias --numBootstraps 100
 
 #823 D 2021
-salmon quant -i EISA_index -l A -1 ${fa823D1_L1_R1_1} ${fa823D1_L1_R1_2} ${fa823D1_L2_R1_1} ${fa823D1_L2_R1_2} -2 ${fa823D1_L1_R2_1} ${fa823D1_L1_R2_2} ${fa823D1_L2_R2_1} ${fa823D1_L2_R2_2} --validateMappings -p 30 -o salmon_out/822D1 --seqBias --gcBias --numBootstraps 100
+salmon quant -i EISA_index -l A -1 ${fa823D1_L1_R1_1} ${fa823D1_L1_R1_2} ${fa823D1_L2_R1_1} ${fa823D1_L2_R1_2} -2 ${fa823D1_L1_R2_1} ${fa823D1_L1_R2_2} ${fa823D1_L2_R2_1} ${fa823D1_L2_R2_2} --validateMappings -p 30 -o salmon_out/823D1 --seqBias --gcBias --numBootstraps 100
 salmon quant -i EISA_index -l A -1 ${fa823D2_L1_R1} ${fa823D2_L2_R1} -2 ${fa823D2_L1_R2} ${fa823D2_L2_R2} --validateMappings -p 30 -o salmon_out/823D2 --seqBias --gcBias --numBootstraps 100
 salmon quant -i EISA_index -l A -1 ${fa823D3_L1_R1} ${fa823D3_L2_R1} -2 ${fa823D3_L1_R2} ${fa823D3_L2_R2} --validateMappings -p 30 -o salmon_out/823D3 --seqBias --gcBias --numBootstraps 100
 
