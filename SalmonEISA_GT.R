@@ -9,14 +9,12 @@ source("/Users/aa/Documents/GitHub/SalmonEISA/SalmonEISA_func.R")
 
 # input files and parameters
 gene_table <- "wormbase/c_elegans.PRJNA13758.WS279.TableGeneIDs.tsv"
-txFile <- "rawcounts/kruezi2013_norep/rawcounts_transcript.txt"
-geFile <- "rawcounts/kruezi2013_norep/rawcounts_gene.txt"
+txFile <- "rawcounts/GROseq_RNAseq/rawcounts_transcript.txt"
+geFile <- "rawcounts/GROseq_RNAseq/rawcounts_gene.txt"
 
-gro_txFile <- "rawcounts/kruezi2013_rep/rawcounts_transcript_gro.txt"
-gro_geFile <- "rawcounts/kruezi2013_rep/rawcounts_gene_gro.txt"
-
-#gro_txFile <- "rawcounts/kruezi2013_norep/rawcounts_transcript_gro.txt"
-#gro_geFile <- "rawcounts/kruezi2013_norep/rawcounts_gene_gro.txt"
+gro_txFile <- "rawcounts/GROseq_RNAseq/rawcounts_transcript_gro.txt"
+gro_geFile <- "rawcounts/GROseq_RNAseq/rawcounts_gene_gro.txt"
+ctrlRNAi <- TRUE
 
 prepoc_cnt <- function(geFile, txFile, gene_table) {
   # read in count tables
@@ -51,6 +49,14 @@ gro_cntIn <- get_cnt(gro_geFile)
 # aggregate the read counts from transcripts to genes
 gro_cntEx <- get_cnt(gro_txFile)
 
+if (ctrlRNAi) {
+  gro_cntEx[,c(1,2)] <- NULL
+  gro_cntIn[,c(1,2)] <- NULL
+} else {
+  gro_cntEx[,c(3,4)] <- NULL
+  gro_cntIn[,c(3,4)] <- NULL
+}
+
 gro_genes.in.both <- intersect(rownames(gro_cntEx),rownames(gro_cntIn))
 gro_cntIn <- get_names(gro_cntIn, gro_genes.in.both, gene_table, chrom="all")
 gro_cntEx <- get_names(gro_cntEx, gro_genes.in.both, gene_table, chrom="all")
@@ -69,9 +75,9 @@ gro_cnt.norm <- gro_cnt.norm[gro_genes.sel,]
 
 # edgeR workflow
 #conditions <- c("366","366","366","366","382","382","382","382")
-conditions <- c("WT","WT","WT","WT","dpy26cs","dpy26cs","dpy26cs","dpy26cs")
+conditions <- c("WT","WT","WT","WT","sdc2RNAi","sdc2RNAi","sdc2RNAi")
 factorCondition <- factor(conditions, levels=unique(conditions)) # define experimental factor 'conditions'
-group <- c(1,1,1,1,2,2,2,2)
+group <- c(1,1,1,1,2,2,2)
 
 gro_conditions <- c("WT", "WT","sdc2RNAi","sdc2RNAi")
 gro_factorCondition <- factor(gro_conditions, levels=unique(gro_conditions)) # define experimental factor 'conditions'
@@ -116,15 +122,13 @@ gro_lrt <- glmLRT(gro_fit) # calculate likelihood-ratio between full and reduced
 gro_tt <- topTags(gro_lrt, n=nrow(gro_y)) #final table with significance level for each gene 
 
 
-
-
 tt.df.in <- data.frame(ttIn)
 tt.df.ex <- data.frame(ttEx)
 delta.cnt.edgeR <- data.frame(row.names = rownames(tt.df.ex[order(row.names(tt.df.ex)),]),dExon=tt.df.ex$logFC[order(row.names(tt.df.ex))], dIntron=tt.df.in$logFC[order(row.names(tt.df.in))]) 
-forgro_delta.cnt.edgeR <- data.frame(row.names = rownames(tt.df.ex[order(row.names(tt.df.ex)),]),dIntron_WT_dpy26cs=tt.df.in$logFC[order(row.names(tt.df.in))]) 
+forgro_delta.cnt.edgeR <- data.frame(row.names = rownames(tt.df.ex[order(row.names(tt.df.ex)),]),dIntron_WT_sdc2RNAi=tt.df.in$logFC[order(row.names(tt.df.in))]) 
 
 gro.tt.df <- data.frame(gro_tt)
-gro.delta.cnt.edgeR <- data.frame(row.names = rownames(gro.tt.df[order(row.names(gro.tt.df)),]),GROseq_N2_sdc2RNAi=gro.tt.df$logFC[order(row.names(gro.tt.df))]) 
+gro.delta.cnt.edgeR <- data.frame(row.names = rownames(gro.tt.df[order(row.names(gro.tt.df)),]),GROseq_WT_sdc2RNAi=gro.tt.df$logFC[order(row.names(gro.tt.df))]) 
 
 gro_scatter(forgro_delta.cnt.edgeR,gro.delta.cnt.edgeR)
 

@@ -341,13 +341,13 @@ gro_scatter <- function(cnt,gro_cnt) {
   cnt <- cnt[rownames(cnt) %in% inboth,]
   gro_cnt <- gro_cnt[rownames(gro_cnt) %in% inboth,]
   
-  gro_gro <- data.frame(GROseq_N2_sdc2RNAi=gro_cnt,dIntron_WT_dpy26cs=cnt)
+  gro_gro <- data.frame(GROseq_WT_sdc2RNAi=gro_cnt,dIntron_WT_sdc2RNAi=cnt)
   
-  corEvI <- round(cor(gro_gro$GROseq_N2_sdc2RNAi,gro_gro$dIntron_WT_dpy26cs), 3)
+  corEvI <- round(cor(gro_gro$GROseq_WT_sdc2RNAi,gro_gro$dIntron_WT_sdc2RNAi), 3)
 
   
   ggplot() + 
-    geom_point(data=gro_gro, mapping=aes(x=GROseq_N2_sdc2RNAi, y=dIntron_WT_dpy26cs), alpha=0.5, size=1) +
+    geom_point(data=gro_gro, mapping=aes(x=GROseq_WT_sdc2RNAi, y=dIntron_WT_sdc2RNAi), alpha=0.5, size=1) +
     ggtitle(paste0('\nR = ',corEvI)) +
     theme_light() +
     coord_fixed() +
