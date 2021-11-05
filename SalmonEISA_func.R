@@ -305,8 +305,7 @@ scatter_deltas_X <- function(delta.cnt,delta.cnt_X) {
     theme_light() +
     coord_fixed() + 
     theme(plot.title=element_text(size=12, face="italic", margin = margin(t=40, b = -38)),
-          plot.subtitle=element_text(size=12, face="italic", color="red", margin = margin(t=40, b = -35))) + 
-    geom_segment(aes(x =-3.2, y = -3.2,xend = 9.3, yend = 9.3))
+          plot.subtitle=element_text(size=12, face="italic", color="red", margin = margin(t=40, b = -35)))# + geom_segment(aes(x =-3.2, y = -3.2,xend = 9.3, yend = 9.3))
   
 }
 

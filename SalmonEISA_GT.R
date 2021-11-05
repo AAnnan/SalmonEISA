@@ -13,6 +13,8 @@ txFile <- "rawcounts/15_10_GT/rawcounts_transcript.txt"
 geFile <- "rawcounts/15_10_GT/rawcounts_gene.txt"
 #conditions <- c("366","366","366","366","382","382","382","382")
 conditions <- c("WT","WT","WT","WT","dpy26cs","dpy26cs","dpy26cs","dpy26cs")
+factorCondition <- factor(conditions, levels=unique(conditions)) # define experimental factor 'conditions'
+group <- c(1,1,1,1,2,2,2,2)
 
 # read in count tables
 cntIn <- get_cnt(geFile)
@@ -60,8 +62,6 @@ cntIn <- cntIn[genes.sel,]
 
 
 # edgeR workflow
-factorCondition <- factor(conditions, levels=unique(conditions)) # define experimental factor 'conditions'
-group <- c(1,1,1,1,2,2,2,2)
 
 ##Exons
 yEx <- DGEList(counts=cntEx, genes=rownames(cntEx), group=group) # define DGEList object
