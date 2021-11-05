@@ -15,6 +15,7 @@ geFile <- "rawcounts/GROseq_RNAseq/rawcounts_gene.txt"
 gro_txFile <- "rawcounts/GROseq_RNAseq/rawcounts_transcript_gro.txt"
 gro_geFile <- "rawcounts/GROseq_RNAseq/rawcounts_gene_gro.txt"
 ctrlRNAi <- TRUE
+chrm = "all"
 
 prepoc_cnt <- function(geFile, txFile, gene_table) {
   # read in count tables
@@ -23,8 +24,8 @@ prepoc_cnt <- function(geFile, txFile, gene_table) {
   cntEx <- get_cnt(txFile)
   
   genes.in.both <- intersect(rownames(cntEx),rownames(cntIn))
-  cntIn <- get_names(cntIn, genes.in.both, gene_table, chrom="all")
-  cntEx <- get_names(cntEx, genes.in.both, gene_table, chrom="all")
+  cntIn <- get_names(cntIn, genes.in.both, gene_table, chrom=chrm)
+  cntEx <- get_names(cntEx, genes.in.both, gene_table, chrom=chrm)
   #all(rownames(cntIn)==rownames(cntEx))
   
   # find genes with sufficient exonic and intronic counts (genes.sel)
@@ -58,8 +59,8 @@ if (ctrlRNAi) {
 }
 
 gro_genes.in.both <- intersect(rownames(gro_cntEx),rownames(gro_cntIn))
-gro_cntIn <- get_names(gro_cntIn, gro_genes.in.both, gene_table, chrom="all")
-gro_cntEx <- get_names(gro_cntEx, gro_genes.in.both, gene_table, chrom="all")
+gro_cntIn <- get_names(gro_cntIn, gro_genes.in.both, gene_table, chrom=chrm)
+gro_cntEx <- get_names(gro_cntEx, gro_genes.in.both, gene_table, chrom=chrm)
 all(rownames(gro_cntIn)==rownames(gro_cntEx))
 
 gro_cnt <- gro_cntEx + gro_cntIn
