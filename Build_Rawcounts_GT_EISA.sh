@@ -13,71 +13,118 @@
 ## Run in folder containing: 
 # EISA_23_09_2021_GT with Salmon input (multifastas) and outpt (salmon_out)
 
+# Variable names for file paths
+d="../salmon_out"
 
+repb1=("1" "2" "3" "4")
+repb2=("1" "2" "4" "5")
+repCD=("1" "2" "3")
+
+r366b=()
+r382b=()
+r775b=()
+
+r784b=()
+
+r366C=()
+r366D=()
+r821D=()
+r822A=()
+r822C=()
+r823D=()
+
+for r in ${repb1[@]}; do
+	r366b+="366b${r} "
+	r382b+="382b${r} "
+	r775b+="775b${r} "
+done
+
+for r in ${repb2[@]}; do
+	r784b+="784b${r} "
+done
+
+for r in ${repCD[@]}; do
+	r366C+="366C${r} "
+	r366D+="366D${r} "
+	r821D+="821D${r} "
+	r822A+="822A${r} "
+	r822C+="822C${r} "
+	r823D+="823D${r} "
+done
 ### Build Feature-Gene correspondance table
 echo "Building Feature->GeneID correspondance table"
 
+mkdir tmp
+cd tmp
 # Extract the gene/transcript number and its corresponding gene ID
-grep '>' c_elegans.PRJNA13758.WS279.mRNA_transcripts.fa | sed 's/>//g' | sed 's/gene=//g' > gene_tx_list.txt
-grep '>' CE_genes_seq.fa | sed 's/>//g' > gene_gen_list.txt
+grep '>' ../c_elegans.PRJNA13758.WS279.mRNA_transcripts.fa | sed 's/>//g' | sed 's/gene=//g' > gene_tx_list.txt
+grep '>' ../CE_genes_seq.fa | sed 's/>//g' > gene_gen_list.txt
 
-# Variable names for file paths
-d="salmon_out"
-sample=("366" "382" "775")
-rep=("b1" "b2" "b3" "b4")
+echo "Gene_IDs" > order_WBGenes_GE && awk 'NR==FNR{a[$1];next} $1 in a{print $1}' ${d}/366C1/quant.sf gene_gen_list.txt >> order_WBGenes_GE
+echo "Gene_IDs" > order_WBGenes_Tx && awk 'NR==FNR{a[$1];next} $1 in a{print $2}' ${d}/366C1/quant.sf gene_tx_list.txt >> order_WBGenes_Tx
 
-### Build read count columns by sample / replicate
-for s in ${sample[@]}; do
-	for r in ${rep[@]}; do
-		echo "Extracting read count from "${s}${r}
-
-		echo ${s}${r} > NumReads_gen_${s}${r}.sf && awk 'NR==FNR{a[$1];next} $1 in a{print $5}' gene_gen_list.txt ${d}/${s}${r}/quant.sf >> NumReads_gen_${s}${r}.sf
-		echo ${s}${r} > NumReads_tx_${s}${r}.sf && awk 'NR==FNR{a[$1];next} $1 in a{print $5}' gene_tx_list.txt ${d}/${s}${r}/quant.sf >> NumReads_tx_${s}${r}.sf
-	done
-done
-
-# Variable names for file paths
-d="salmon_out"
-sample=("784")
-rep=("b1" "b2" "b4" "b5")
+mkdir gen
+mkdir tx
 
 ### Build read count columns by sample / replicate
-for s in ${sample[@]}; do
-	for r in ${rep[@]}; do
-		echo "Extracting read count from "${s}${r}
+for s in ${r366b[@]} ${r382b[@]} ${r775b[@]} ${r784b[@]} ${r366C[@]} ${r366D[@]} ${r821D[@]} ${r822A[@]} ${r822C[@]} ${r823D[@]}; do
+	echo "Extracting read count from "${s}
 
-		echo ${s}${r} > NumReads_gen_${s}${r}.sf && awk 'NR==FNR{a[$1];next} $1 in a{print $5}' gene_gen_list.txt ${d}/${s}${r}/quant.sf >> NumReads_gen_${s}${r}.sf
-		echo ${s}${r} > NumReads_tx_${s}${r}.sf && awk 'NR==FNR{a[$1];next} $1 in a{print $5}' gene_tx_list.txt ${d}/${s}${r}/quant.sf >> NumReads_tx_${s}${r}.sf
-	done
-done
-
-
-# Variable names for file paths
-d="salmon_out"
-sample=("366C" "366D" "821D" "822A" "822C" "823D")
-rep=("1" "2" "3")
-
-### Build read count columns by sample / replicate
-for s in ${sample[@]}; do
-	for r in ${rep[@]}; do
-		echo "Extracting read count from "${s}${r}
-
-		echo ${s}${r} > NumReads_gen_${s}${r}.sf && awk 'NR==FNR{a[$1];next} $1 in a{print $5}' gene_gen_list.txt ${d}/${s}${r}/quant.sf >> NumReads_gen_${s}${r}.sf
-		echo ${s}${r} > NumReads_tx_${s}${r}.sf && awk 'NR==FNR{a[$1];next} $1 in a{print $5}' gene_tx_list.txt ${d}/${s}${r}/quant.sf >> NumReads_tx_${s}${r}.sf
-	done
+	echo ${s} > gen/${s} && awk 'NR==FNR{a[$1];next} $1 in a{print $5}' gene_gen_list.txt ${d}/${s}/quant.sf >> gen/${s}
+	echo ${s} > tx/${s} && awk 'NR==FNR{a[$1];next} $1 in a{print $5}' gene_tx_list.txt ${d}/${s}/quant.sf >> tx/${s}
 done
 
 ### Build final raw geneic/transcriptic counts
 echo "Building raw geneic/transcriptic count files"
 
-echo "Gene_IDs" > order_WBGenes_GE && awk 'NR==FNR{a[$1];next} $1 in a{print $1}' ${d}/${sample[0]}${rep[0]}/quant.sf gene_gen_list.txt >> order_WBGenes_GE
-echo "Gene_IDs" > order_WBGenes_Tx && awk 'NR==FNR{a[$1];next} $1 in a{print $2}' ${d}/${sample[0]}${rep[0]}/quant.sf gene_tx_list.txt >> order_WBGenes_Tx
+# Contrasts: 
+#WT2020_vs_dpy26cs2020
+#${r366b[@]} ${r382b[@]}
+#WT2021_vs_dpy26cs2020
+#${r366C[@]} ${r382b[@]}
+#WT2021aWT2020_vs_dpy26cs2020
+#${r366b[@]} ${r366C[@]} ${r382b[@]}
+#TIR1wtA_vs_TIR1sd3degA
+#${r823D[@]} ${r822A[@]}
+#TIR1sd3deg_vs_TIR1sd3degA
+#${r822C[@]} ${r822A[@]}
+#TIR1wtA_vs_dpy26TIR1sd3degA
+#${r823D[@]} ${r821D[@]}
+#TIR1sd3deg_vs_dpy26TIR1sd3degA
+#${r822C[@]} ${r821D[@]}
 
 # Paste together all the columns
-paste order_WBGenes_Tx NumReads_tx_366b1.sf NumReads_tx_366b2.sf NumReads_tx_366b3.sf NumReads_tx_366b4.sf NumReads_tx_382b1.sf NumReads_tx_382b2.sf NumReads_tx_382b3.sf NumReads_tx_382b4.sf > rawcounts_transcript.txt
-paste order_WBGenes_GE NumReads_gen_366b1.sf NumReads_gen_366b2.sf NumReads_gen_366b3.sf NumReads_gen_366b4.sf NumReads_gen_382b1.sf NumReads_gen_382b2.sf NumReads_gen_382b3.sf NumReads_gen_382b4.sf > rawcounts_gene.txt
+cd gen
+paste ../order_WBGenes_GE ${r366b[@]} ${r382b[@]} > ../order_WT2020_vs_dpy26cs2020_rawcounts_gene.txt
+paste ../order_WBGenes_GE ${r366C[@]} ${r382b[@]} > ../order_WT2021_vs_dpy26cs2020_rawcounts_gene.txt
+paste ../order_WBGenes_GE ${r366b[@]} ${r366C[@]} ${r382b[@]} > ../order_WT2021aWT2020_vs_dpy26cs2020_rawcounts_gene.txt
+paste ../order_WBGenes_GE ${r823D[@]} ${r822A[@]} > ../order_TIR1wtA_vs_TIR1sd3degA_rawcounts_gene.txt
+paste ../order_WBGenes_GE ${r822C[@]} ${r822A[@]} > ../order_TIR1sd3deg_vs_TIR1sd3degA_rawcounts_gene.txt
+paste ../order_WBGenes_GE ${r823D[@]} ${r821D[@]} > ../order_TIR1wtA_vs_dpy26TIR1sd3degA_rawcounts_gene.txt
+paste ../order_WBGenes_GE ${r822C[@]} ${r821D[@]} > ../order_TIR1sd3deg_vs_dpy26TIR1sd3degA_rawcounts_gene.txt
 
+
+cd ../tx
+paste ../order_WBGenes_Tx ${r366b[@]} ${r382b[@]} > ../WT2020_vs_dpy26cs2020_rawcounts_transcript.txt
+paste ../order_WBGenes_Tx ${r366C[@]} ${r382b[@]} > ../WT2021_vs_dpy26cs2020_rawcounts_transcript.txt
+paste ../order_WBGenes_Tx ${r366b[@]} ${r366C[@]} ${r382b[@]} > ../WT2021aWT2020_vs_dpy26cs2020_rawcounts_transcript.txt
+paste ../order_WBGenes_Tx ${r823D[@]} ${r822A[@]} > ../TIR1wtA_vs_TIR1sd3degA_rawcounts_transcript.txt
+paste ../order_WBGenes_Tx ${r822C[@]} ${r822A[@]} > ../TIR1sd3deg_vs_TIR1sd3degA_rawcounts_transcript.txt
+paste ../order_WBGenes_Tx ${r823D[@]} ${r821D[@]} > ../TIR1wtA_vs_dpy26TIR1sd3degA_rawcounts_transcript.txt
+paste ../order_WBGenes_Tx ${r822C[@]} ${r821D[@]} > ../TIR1sd3deg_vs_dpy26TIR1sd3degA_rawcounts_transcript.txt
+
+
+cd ..
+sed 's/Gene://g' order_WT2020_vs_dpy26cs2020_rawcounts_gene.txt > WT2020_vs_dpy26cs2020_rawcounts_gene.txt
+sed 's/Gene://g' order_WT2021_vs_dpy26cs2020_rawcounts_gene.txt > WT2021_vs_dpy26cs2020_rawcounts_gene.txt
+sed 's/Gene://g' order_WT2021aWT2020_vs_dpy26cs2020_rawcounts_gene.txt > WT2021aWT2020_vs_dpy26cs2020_rawcounts_gene.txt
+sed 's/Gene://g' order_TIR1wtA_vs_TIR1sd3degA_rawcounts_gene.txt > TIR1wtA_vs_TIR1sd3degA_rawcounts_gene.txt
+sed 's/Gene://g' order_TIR1sd3deg_vs_TIR1sd3degA_rawcounts_gene.txt > TIR1sd3deg_vs_TIR1sd3degA_rawcounts_gene.txt
+sed 's/Gene://g' order_TIR1wtA_vs_dpy26TIR1sd3degA_rawcounts_gene.txt > TIR1wtA_vs_dpy26TIR1sd3degA_rawcounts_gene.txt
+sed 's/Gene://g' order_TIR1sd3deg_vs_dpy26TIR1sd3degA_rawcounts_gene.txt > TIR1sd3deg_vs_dpy26TIR1sd3degA_rawcounts_gene.txt
+
+mv *raw* ..
 # Clean up
-rm g*_t*_list.txt g*_g*_list.txt
-rm NumReads*.sf
+cd ..
 rm order*
+rm -r tmp

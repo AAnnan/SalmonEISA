@@ -290,7 +290,7 @@ scatter_deltas_s3 <- function(delta.cnt,signiEx,signiIn) {
     theme(plot.title=element_text(size=12, face="italic", margin = margin(t=40, b = -38)))
 }
 
-scatter_deltas_X <- function(delta.cnt,delta.cnt_X) {
+scatter_deltas_X <- function(delta.cnt,delta.cnt_X,cond) {
   `%notin%` <- Negate(`%in%`)
   corEvI <- round(cor(delta.cnt$dIntron,delta.cnt$dExon), 3)
   corEvI_X <- round(cor(delta.cnt_X$dIntron,delta.cnt_X$dExon), 3)
@@ -300,13 +300,12 @@ scatter_deltas_X <- function(delta.cnt,delta.cnt_X) {
   ggplot() + 
     geom_point(data=delta.cnt, mapping=aes(x=dIntron, y=dExon, color = "Autosomal genes"), alpha=0.5, size=1) +
     geom_point(data=delta.cnt_X, mapping=aes(x=dIntron, y=dExon, color = "X genes"), alpha=0.5, size=1) +
-    ggtitle(paste0("WT - dpy26",'\nR = ',corEvI), subtitle = paste0('R (X) = ',corEvI_X)) +
+    ggtitle(paste0(cond,'\nR = ',corEvI), subtitle = paste0('R (X) = ',corEvI_X)) +
     scale_colour_manual(name = NULL, values = c("X genes"="red","Autosomal genes"="black")) +
     theme_light() +
     coord_fixed() + 
     theme(plot.title=element_text(size=12, face="italic", margin = margin(t=40, b = -38)),
-          plot.subtitle=element_text(size=12, face="italic", color="red", margin = margin(t=40, b = -35))) + 
-    geom_segment(aes(x =-3.2, y = -3.2,xend = 9.3, yend = 9.3))
+          plot.subtitle=element_text(size=12, face="italic", color="red", margin = margin(t=40, b = -35)))# + geom_segment(aes(x =-3.2, y = -3.2,xend = 9.3, yend = 9.3),size=0.1)
   
 }
 
