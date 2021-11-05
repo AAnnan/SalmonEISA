@@ -57,10 +57,11 @@ Salmoneisa <- function(gene_table,geFile,txFile,conditions,group,cond) {
   delta.cnt.edgeR <- data.frame(row.names = rownames(tt.df.ex[order(row.names(tt.df.ex)),]),dExon=tt.df.ex$logFC[order(row.names(tt.df.ex))], dIntron=tt.df.in$logFC[order(row.names(tt.df.in))]) 
   
   delta.cnt.edgeR_X <- sel_X(delta.cnt.edgeR,gene_table)
-  scatter_deltas_X(delta.cnt.edgeR,delta.cnt.edgeR_X,cond)
-  
+
   #Looking for specific genes
-  #delta.cnt.edgeR[delta.cnt.edgeR$dIntron>6 | delta.cnt.edgeR$dExon>5 ,]
+  print(delta.cnt.edgeR[rownames(delta.cnt.edgeR)=="srw-85",])
+  
+  scatter_deltas_X(delta.cnt.edgeR,delta.cnt.edgeR_X,cond)
 }
 
 Salmoneisa(gene_table,"WT2020_vs_dpy26cs2020_rawcounts_gene.txt","WT2020_vs_dpy26cs2020_rawcounts_transcript.txt",c("WT","WT","WT","WT","exp","exp","exp","exp"),c(1,1,1,1,2,2,2,2),"WT2020-dpy26cs2020")
@@ -68,8 +69,10 @@ Salmoneisa(gene_table,"TIR1sd3deg_vs_dpy26TIR1sd3degA_rawcounts_gene.txt","TIR1s
 Salmoneisa(gene_table,"TIR1sd3deg_vs_TIR1sd3degA_rawcounts_gene.txt","TIR1sd3deg_vs_TIR1sd3degA_rawcounts_transcript.txt",c("WT","WT","WT","exp","exp","exp"),c(1,1,1,2,2,2),"TIR1sd3deg-TIR1sd3degA")
 Salmoneisa(gene_table,"TIR1wtA_vs_dpy26TIR1sd3degA_rawcounts_gene.txt","TIR1wtA_vs_dpy26TIR1sd3degA_rawcounts_transcript.txt",c("WT","WT","WT","exp","exp","exp"),c(1,1,1,2,2,2),"TIR1wtA-dpy26TIR1sd3degA")
 Salmoneisa(gene_table,"TIR1wtA_vs_TIR1sd3degA_rawcounts_gene.txt","TIR1wtA_vs_TIR1sd3degA_rawcounts_transcript.txt",c("WT","WT","WT","exp","exp","exp"),c(1,1,1,2,2,2),"TIR1wtA-TIR1sd3degA")
-Salmoneisa(gene_table,"WT2021aWT2020_vs_dpy26cs2020_rawcounts_gene.txt","WT2021aWT2020_vs_dpy26cs2020_rawcounts_transcript.txt",c("WT","WT","WT","WT","WT","WT","WT","exp","exp","exp","exp"),c(1,1,1,1,1,1,1,2,2,2,2),"WT2021aWT2020-dpy26cs2020")
-Salmoneisa(gene_table,"WT2021_vs_dpy26cs2020_rawcounts_gene.txt","WT2021_vs_dpy26cs2020_rawcounts_transcript.txt",c("WT","WT","WT","exp","exp","exp","exp"),c(1,1,1,2,2,2,2),"WT2021-dpy26cs2020")
+
+
+#Salmoneisa(gene_table,"WT2021aWT2020_vs_dpy26cs2020_rawcounts_gene.txt","WT2021aWT2020_vs_dpy26cs2020_rawcounts_transcript.txt",c("WT","WT","WT","WT","WT","WT","WT","exp","exp","exp","exp"),c(1,1,1,1,1,1,1,2,2,2,2),"WT2021aWT2020-dpy26cs2020")
+#Salmoneisa(gene_table,"WT2021_vs_dpy26cs2020_rawcounts_gene.txt","WT2021_vs_dpy26cs2020_rawcounts_transcript.txt",c("WT","WT","WT","exp","exp","exp","exp"),c(1,1,1,2,2,2,2),"WT2021-dpy26cs2020")
 
 
 
