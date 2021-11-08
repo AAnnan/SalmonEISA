@@ -1,7 +1,7 @@
 #! /bin/bash
 
 ## Resource Allocation
-#SBATCH --time=2-00:00:00
+#SBATCH --time=3-00:00:00
 #SBATCH --partition=gpu
 #SBATCH --mem=48G
 #SBATCH –-ntasks=30
