@@ -1,10 +1,10 @@
 #! /bin/bash
 
 ## Resource Allocation
-#SBATCH --time=4-00:00:00
+#SBATCH --time=3-00:00:00
 #SBATCH --partition=gpu
-#SBATCH --mem=196G
-#SBATCH –-cpus-per-task=32
+#SBATCH --mem=48G
+#SBATCH –-ntasks=30
 
 #SBATCH --mail-user=ahrmad.annan@students.unibe.ch
 #SBATCH --mail-type=end,fail
@@ -14,7 +14,7 @@ source ${CONDA_ACTIVATE} salmon
 
 cat c_elegans.PRJNA13758.WS279.mRNA_transcripts.fa CE_genes_seq.fa c_elegans.PRJNA13758.WS279.genomic.fa > CE_gentrome.fa
 
-salmon index -t CE_gentrome.fa -i EISA_index --decoys decoys.txt -k 19
+salmon index -p 30 -t CE_gentrome.fa -i EISA_index --decoys decoys.txt -k 19
 #the k size selected here will act as the minimum acceptable length for a valid match.
 
 ########################################################################################################################
@@ -154,58 +154,58 @@ fa823D3_L2_R2=${data}/823_D3/823D3_L2_R2_001_MQXHzBBy60vy.fastq.gz
 
 
 #366 b 2020
-salmon quant -i EISA_index -l A -r ${fa366b1_L1_R1} ${fa366b1_L2_R1} --validateMappings -p 30 -o salmon_out/366b1 --seqBias --gcBias --numBootstraps 100
-salmon quant -i EISA_index -l A -r ${fa366b2_L1_R1} ${fa366b2_L2_R1} --validateMappings -p 30 -o salmon_out/366b2 --seqBias --gcBias --numBootstraps 100
-salmon quant -i EISA_index -l A -r ${fa366b3_L1_R1} ${fa366b3_L2_R1} --validateMappings -p 30 -o salmon_out/366b3 --seqBias --gcBias --numBootstraps 100
-salmon quant -i EISA_index -l A -r ${fa366b4_L1_R1} ${fa366b4_L2_R1} --validateMappings -p 30 -o salmon_out/366b4 --seqBias --gcBias --numBootstraps 100
+salmon quant -i EISA_index -l A -r ${fa366b1_L1_R1} ${fa366b1_L2_R1} --validateMappings -p 30 -o salmon_out/366b1 --seqBias --gcBias 
+salmon quant -i EISA_index -l A -r ${fa366b2_L1_R1} ${fa366b2_L2_R1} --validateMappings -p 30 -o salmon_out/366b2 --seqBias --gcBias 
+salmon quant -i EISA_index -l A -r ${fa366b3_L1_R1} ${fa366b3_L2_R1} --validateMappings -p 30 -o salmon_out/366b3 --seqBias --gcBias 
+salmon quant -i EISA_index -l A -r ${fa366b4_L1_R1} ${fa366b4_L2_R1} --validateMappings -p 30 -o salmon_out/366b4 --seqBias --gcBias 
 
 #382 b 2020
-salmon quant -i EISA_index -l A -r ${fa382b1_L1_R1} ${fa382b1_L2_R1} --validateMappings -p 30 -o salmon_out/382b1 --seqBias --gcBias --numBootstraps 100
-salmon quant -i EISA_index -l A -r ${fa382b2_L1_R1} ${fa382b2_L2_R1} --validateMappings -p 30 -o salmon_out/382b2 --seqBias --gcBias --numBootstraps 100
-salmon quant -i EISA_index -l A -r ${fa382b3_L1_R1} ${fa382b3_L2_R1} --validateMappings -p 30 -o salmon_out/382b3 --seqBias --gcBias --numBootstraps 100
-salmon quant -i EISA_index -l A -r ${fa382b4_L1_R1} ${fa382b4_L2_R1} --validateMappings -p 30 -o salmon_out/382b4 --seqBias --gcBias --numBootstraps 100
+salmon quant -i EISA_index -l A -r ${fa382b1_L1_R1} ${fa382b1_L2_R1} --validateMappings -p 30 -o salmon_out/382b1 --seqBias --gcBias 
+salmon quant -i EISA_index -l A -r ${fa382b2_L1_R1} ${fa382b2_L2_R1} --validateMappings -p 30 -o salmon_out/382b2 --seqBias --gcBias 
+salmon quant -i EISA_index -l A -r ${fa382b3_L1_R1} ${fa382b3_L2_R1} --validateMappings -p 30 -o salmon_out/382b3 --seqBias --gcBias 
+salmon quant -i EISA_index -l A -r ${fa382b4_L1_R1} ${fa382b4_L2_R1} --validateMappings -p 30 -o salmon_out/382b4 --seqBias --gcBias 
 
 #775 b 2020
-salmon quant -i EISA_index -l A -r ${fa775b1_L1_R1} ${fa775b1_L2_R1} --validateMappings -p 30 -o salmon_out/775b1 --seqBias --gcBias --numBootstraps 100
-salmon quant -i EISA_index -l A -r ${fa775b2_L1_R1} ${fa775b2_L2_R1} --validateMappings -p 30 -o salmon_out/775b2 --seqBias --gcBias --numBootstraps 100
-salmon quant -i EISA_index -l A -r ${fa775b3_L1_R1} ${fa775b3_L2_R1} --validateMappings -p 30 -o salmon_out/775b3 --seqBias --gcBias --numBootstraps 100
-salmon quant -i EISA_index -l A -r ${fa775b4_L1_R1} ${fa775b4_L2_R1} --validateMappings -p 30 -o salmon_out/775b4 --seqBias --gcBias --numBootstraps 100
+salmon quant -i EISA_index -l A -r ${fa775b1_L1_R1} ${fa775b1_L2_R1} --validateMappings -p 30 -o salmon_out/775b1 --seqBias --gcBias 
+salmon quant -i EISA_index -l A -r ${fa775b2_L1_R1} ${fa775b2_L2_R1} --validateMappings -p 30 -o salmon_out/775b2 --seqBias --gcBias 
+salmon quant -i EISA_index -l A -r ${fa775b3_L1_R1} ${fa775b3_L2_R1} --validateMappings -p 30 -o salmon_out/775b3 --seqBias --gcBias 
+salmon quant -i EISA_index -l A -r ${fa775b4_L1_R1} ${fa775b4_L2_R1} --validateMappings -p 30 -o salmon_out/775b4 --seqBias --gcBias 
 
 #784 b 2020
-salmon quant -i EISA_index -l A -r ${fa784b1_L1_R1} ${fa784b1_L2_R1} --validateMappings -p 30 -o salmon_out/784b1 --seqBias --gcBias --numBootstraps 100
-salmon quant -i EISA_index -l A -r ${fa784b2_L1_R1} ${fa784b2_L2_R1} --validateMappings -p 30 -o salmon_out/784b2 --seqBias --gcBias --numBootstraps 100
-salmon quant -i EISA_index -l A -r ${fa784b4_L1_R1} ${fa784b4_L2_R1} --validateMappings -p 30 -o salmon_out/784b4 --seqBias --gcBias --numBootstraps 100
-salmon quant -i EISA_index -l A -r ${fa784b5_L1_R1} ${fa784b5_L2_R1} --validateMappings -p 30 -o salmon_out/784b5 --seqBias --gcBias --numBootstraps 100
+salmon quant -i EISA_index -l A -r ${fa784b1_L1_R1} ${fa784b1_L2_R1} --validateMappings -p 30 -o salmon_out/784b1 --seqBias --gcBias 
+salmon quant -i EISA_index -l A -r ${fa784b2_L1_R1} ${fa784b2_L2_R1} --validateMappings -p 30 -o salmon_out/784b2 --seqBias --gcBias 
+salmon quant -i EISA_index -l A -r ${fa784b4_L1_R1} ${fa784b4_L2_R1} --validateMappings -p 30 -o salmon_out/784b4 --seqBias --gcBias 
+salmon quant -i EISA_index -l A -r ${fa784b5_L1_R1} ${fa784b5_L2_R1} --validateMappings -p 30 -o salmon_out/784b5 --seqBias --gcBias 
 
 #366 C 2021
-salmon quant -i EISA_index -l A -1 ${fa366C1_L1_R1} ${fa366C1_L2_R1} -2 ${fa366C1_L1_R2} ${fa366C1_L2_R2} --validateMappings -p 30 -o salmon_out/366C1 --seqBias --gcBias --numBootstraps 100
-salmon quant -i EISA_index -l A -1 ${fa366C2_L1_R1} ${fa366C2_L2_R1} -2 ${fa366C2_L1_R2} ${fa366C2_L2_R2} --validateMappings -p 30 -o salmon_out/366C2 --seqBias --gcBias --numBootstraps 100
-salmon quant -i EISA_index -l A -1 ${fa366C3_L1_R1} ${fa366C3_L2_R1} -2 ${fa366C3_L1_R2} ${fa366C3_L2_R2} --validateMappings -p 30 -o salmon_out/366C3 --seqBias --gcBias --numBootstraps 100
+salmon quant -i EISA_index -l A -1 ${fa366C1_L1_R1} ${fa366C1_L2_R1} -2 ${fa366C1_L1_R2} ${fa366C1_L2_R2} --validateMappings -p 30 -o salmon_out/366C1 --seqBias --gcBias 
+salmon quant -i EISA_index -l A -1 ${fa366C2_L1_R1} ${fa366C2_L2_R1} -2 ${fa366C2_L1_R2} ${fa366C2_L2_R2} --validateMappings -p 30 -o salmon_out/366C2 --seqBias --gcBias 
+salmon quant -i EISA_index -l A -1 ${fa366C3_L1_R1} ${fa366C3_L2_R1} -2 ${fa366C3_L1_R2} ${fa366C3_L2_R2} --validateMappings -p 30 -o salmon_out/366C3 --seqBias --gcBias 
 
 #366 D 2021
-salmon quant -i EISA_index -l A -1 ${fa366D1_L1_R1} ${fa366D1_L2_R1} -2 ${fa366D1_L1_R2} ${fa366D1_L2_R2} --validateMappings -p 30 -o salmon_out/366D1 --seqBias --gcBias --numBootstraps 100
-salmon quant -i EISA_index -l A -1 ${fa366D2_L1_R1} ${fa366D2_L2_R1} -2 ${fa366D2_L1_R2} ${fa366D2_L2_R2} --validateMappings -p 30 -o salmon_out/366D2 --seqBias --gcBias --numBootstraps 100
-salmon quant -i EISA_index -l A -1 ${fa366D3_L1_R1} ${fa366D3_L2_R1} -2 ${fa366D3_L1_R2} ${fa366D3_L2_R2} --validateMappings -p 30 -o salmon_out/366D3 --seqBias --gcBias --numBootstraps 100
+salmon quant -i EISA_index -l A -1 ${fa366D1_L1_R1} ${fa366D1_L2_R1} -2 ${fa366D1_L1_R2} ${fa366D1_L2_R2} --validateMappings -p 30 -o salmon_out/366D1 --seqBias --gcBias 
+salmon quant -i EISA_index -l A -1 ${fa366D2_L1_R1} ${fa366D2_L2_R1} -2 ${fa366D2_L1_R2} ${fa366D2_L2_R2} --validateMappings -p 30 -o salmon_out/366D2 --seqBias --gcBias 
+salmon quant -i EISA_index -l A -1 ${fa366D3_L1_R1} ${fa366D3_L2_R1} -2 ${fa366D3_L1_R2} ${fa366D3_L2_R2} --validateMappings -p 30 -o salmon_out/366D3 --seqBias --gcBias 
 
 #822 C 2021
-salmon quant -i EISA_index -l A -1 ${fa822C1_L1_R1} ${fa822C1_L2_R1} -2 ${fa822C1_L1_R2} ${fa822C1_L2_R2} --validateMappings -p 30 -o salmon_out/822C1 --seqBias --gcBias --numBootstraps 100
-salmon quant -i EISA_index -l A -1 ${fa822C2_L1_R1} ${fa822C2_L2_R1} -2 ${fa822C2_L1_R2} ${fa822C2_L2_R2} --validateMappings -p 30 -o salmon_out/822C2 --seqBias --gcBias --numBootstraps 100
-salmon quant -i EISA_index -l A -1 ${fa822C3_L1_R1} ${fa822C3_L2_R1} -2 ${fa822C3_L1_R2} ${fa822C3_L2_R2} --validateMappings -p 30 -o salmon_out/822C3 --seqBias --gcBias --numBootstraps 100
+salmon quant -i EISA_index -l A -1 ${fa822C1_L1_R1} ${fa822C1_L2_R1} -2 ${fa822C1_L1_R2} ${fa822C1_L2_R2} --validateMappings -p 30 -o salmon_out/822C1 --seqBias --gcBias 
+salmon quant -i EISA_index -l A -1 ${fa822C2_L1_R1} ${fa822C2_L2_R1} -2 ${fa822C2_L1_R2} ${fa822C2_L2_R2} --validateMappings -p 30 -o salmon_out/822C2 --seqBias --gcBias 
+salmon quant -i EISA_index -l A -1 ${fa822C3_L1_R1} ${fa822C3_L2_R1} -2 ${fa822C3_L1_R2} ${fa822C3_L2_R2} --validateMappings -p 30 -o salmon_out/822C3 --seqBias --gcBias 
 
 #822 A 2021
-salmon quant -i EISA_index -l A -1 ${fa822A1_L1_R1} ${fa822A1_L2_R1} -2 ${fa822A1_L1_R2} ${fa822A1_L2_R2} --validateMappings -p 30 -o salmon_out/822A1 --seqBias --gcBias --numBootstraps 100
-salmon quant -i EISA_index -l A -1 ${fa822A2_L1_R1} ${fa822A2_L2_R1} -2 ${fa822A2_L1_R2} ${fa822A2_L2_R2} --validateMappings -p 30 -o salmon_out/822A2 --seqBias --gcBias --numBootstraps 100
-salmon quant -i EISA_index -l A -1 ${fa822A3_L1_R1} ${fa822A3_L2_R1} -2 ${fa822A3_L1_R2} ${fa822A3_L2_R2} --validateMappings -p 30 -o salmon_out/822A3 --seqBias --gcBias --numBootstraps 100
+salmon quant -i EISA_index -l A -1 ${fa822A1_L1_R1} ${fa822A1_L2_R1} -2 ${fa822A1_L1_R2} ${fa822A1_L2_R2} --validateMappings -p 30 -o salmon_out/822A1 --seqBias --gcBias 
+salmon quant -i EISA_index -l A -1 ${fa822A2_L1_R1} ${fa822A2_L2_R1} -2 ${fa822A2_L1_R2} ${fa822A2_L2_R2} --validateMappings -p 30 -o salmon_out/822A2 --seqBias --gcBias 
+salmon quant -i EISA_index -l A -1 ${fa822A3_L1_R1} ${fa822A3_L2_R1} -2 ${fa822A3_L1_R2} ${fa822A3_L2_R2} --validateMappings -p 30 -o salmon_out/822A3 --seqBias --gcBias 
 
 #821 D 2021
-salmon quant -i EISA_index -l A -1 ${fa821D1_L1_R1} ${fa821D1_L2_R1} -2 ${fa821D1_L1_R2} ${fa821D1_L2_R2} --validateMappings -p 30 -o salmon_out/821D1 --seqBias --gcBias --numBootstraps 100
-salmon quant -i EISA_index -l A -1 ${fa821D2_L1_R1} ${fa821D2_L2_R1} -2 ${fa821D2_L1_R2} ${fa821D2_L2_R2} --validateMappings -p 30 -o salmon_out/821D2 --seqBias --gcBias --numBootstraps 100
-salmon quant -i EISA_index -l A -1 ${fa821D3_L1_R1} ${fa821D3_L2_R1} -2 ${fa821D3_L1_R2} ${fa821D3_L2_R2} --validateMappings -p 30 -o salmon_out/821D3 --seqBias --gcBias --numBootstraps 100
+salmon quant -i EISA_index -l A -1 ${fa821D1_L1_R1} ${fa821D1_L2_R1} -2 ${fa821D1_L1_R2} ${fa821D1_L2_R2} --validateMappings -p 30 -o salmon_out/821D1 --seqBias --gcBias 
+salmon quant -i EISA_index -l A -1 ${fa821D2_L1_R1} ${fa821D2_L2_R1} -2 ${fa821D2_L1_R2} ${fa821D2_L2_R2} --validateMappings -p 30 -o salmon_out/821D2 --seqBias --gcBias 
+salmon quant -i EISA_index -l A -1 ${fa821D3_L1_R1} ${fa821D3_L2_R1} -2 ${fa821D3_L1_R2} ${fa821D3_L2_R2} --validateMappings -p 30 -o salmon_out/821D3 --seqBias --gcBias 
 
 #823 D 2021
-salmon quant -i EISA_index -l A -1 ${fa823D1_L1_R1_1} ${fa823D1_L1_R1_2} ${fa823D1_L2_R1_1} ${fa823D1_L2_R1_2} -2 ${fa823D1_L1_R2_1} ${fa823D1_L1_R2_2} ${fa823D1_L2_R2_1} ${fa823D1_L2_R2_2} --validateMappings -p 30 -o salmon_out/823D1 --seqBias --gcBias --numBootstraps 100
-salmon quant -i EISA_index -l A -1 ${fa823D2_L1_R1} ${fa823D2_L2_R1} -2 ${fa823D2_L1_R2} ${fa823D2_L2_R2} --validateMappings -p 30 -o salmon_out/823D2 --seqBias --gcBias --numBootstraps 100
-salmon quant -i EISA_index -l A -1 ${fa823D3_L1_R1} ${fa823D3_L2_R1} -2 ${fa823D3_L1_R2} ${fa823D3_L2_R2} --validateMappings -p 30 -o salmon_out/823D3 --seqBias --gcBias --numBootstraps 100
+salmon quant -i EISA_index -l A -1 ${fa823D1_L1_R1_1} ${fa823D1_L1_R1_2} ${fa823D1_L2_R1_1} ${fa823D1_L2_R1_2} -2 ${fa823D1_L1_R2_1} ${fa823D1_L1_R2_2} ${fa823D1_L2_R2_1} ${fa823D1_L2_R2_2} --validateMappings -p 30 -o salmon_out/823D1 --seqBias --gcBias 
+salmon quant -i EISA_index -l A -1 ${fa823D2_L1_R1} ${fa823D2_L2_R1} -2 ${fa823D2_L1_R2} ${fa823D2_L2_R2} --validateMappings -p 30 -o salmon_out/823D2 --seqBias --gcBias 
+salmon quant -i EISA_index -l A -1 ${fa823D3_L1_R1} ${fa823D3_L2_R1} -2 ${fa823D3_L1_R2} ${fa823D3_L2_R2} --validateMappings -p 30 -o salmon_out/823D3 --seqBias --gcBias 
 
 
 conda deactivate
