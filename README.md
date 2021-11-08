@@ -1,5 +1,5 @@
 # SalmonEISA
-Exon/Intron Split Analysis (EISA) pipeline for RNA-Seq *C. elegans* data using GenomicRanges and Salmon
+Exon/Intron Split Analysis (EISA) pipeline for RNA-Seq *C. elegans* data using GenomicRanges, GenomicFeatures and Salmon
 
 ## Index
 
@@ -13,7 +13,7 @@ A Salmon installation:
 * Follow [this](https://combine-lab.github.io/salmon/getting_started/#obtaining-salmon) or [this](https://salmon.readthedocs.io/en/latest/building.html).
 
 The following R libraries: 
-* `GenomicRanges, GenomicFeatures, tidyr, dplyr, edgeR, rtracklayer, BSgenome.Celegans.UCSC.ce11` 
+* `GenomicRanges`, `GenomicFeatures`, `BSgenome.Celegans.UCSC.ce11` and their dependencies.
 
 The following files:
 * Cleaned, preprocessed reads in fasta format.
@@ -25,12 +25,11 @@ The following files:
 
 Take a look at the headers of each of the following scripts, modify them according to your data and run in order:
 
-1. **`Build_Exon_Intron_fastas.R`**
+1. **`Build_genes_fasta.R`**
 1. **`Run_Salmon.sh`**
 1. **`Build_Rawcounts_EISA.sh`**
 1. **`SalmonEISA.R`**
 
 ## Output
-Barplot showing **ΔExon** and **ΔIntron** for each gene (error bars represent the SD to the mean)             |  Scatterplot showing **ΔExon** in relation to **ΔIntron** for all genes (+ the Pearson correlation coefficient)
-:-------------------------------------:|:-------------------------------------:
-![](https://i.imgur.com/CpaFVJX.png)  |  ![](https://i.imgur.com/qvHMSq7.png)
+Scatterplot showing **ΔExon** in relation to **ΔIntron** for **autosomal genes** and <span style="color:red">**X genes**</span> (+ the Pearson correlation coefficient)
+![](https://i.imgur.com/79s2aBV.png)
