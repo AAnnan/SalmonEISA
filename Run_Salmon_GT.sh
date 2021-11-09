@@ -3,7 +3,7 @@
 ## Resource Allocation
 #SBATCH --time=3-00:00:00
 #SBATCH --partition=gpu
-#SBATCH --mem=48G
+#SBATCH --mem=64G
 #SBATCH –-ntasks=30
 
 #SBATCH --mail-user=ahrmad.annan@students.unibe.ch
@@ -131,6 +131,35 @@ fa822C3_L1_R2=${data}/822_C3/822C3_L1_R2_001_DEUVR6BgZWik.fastq.gz
 fa822C3_L2_R1=${data}/822_C3/822C3_L2_R1_001_Gs7MOOxAROrQ.fastq.gz
 fa822C3_L2_R2=${data}/822_C3/822C3_L2_R2_001_pUPlp5nNS9mi.fastq.gz
 
+#828 C 2021
+fa828C1_L1_R1=${data}/828C_1/828C1_L1_R1_001_92jLZEdNYE27.fastq.gz
+fa828C1_L1_R2=${data}/828C_1/828C1_L1_R2_001_b6malwUIKmOR.fastq.gz
+fa828C1_L2_R1=${data}/828C_1/828C1_L2_R1_001_eVO8OaPO6rD5.fastq.gz
+fa828C1_L2_R2=${data}/828C_1/828C1_L2_R2_001_548VC9Dclsso.fastq.gz
+fa828C2_L1_R1=${data}/828_C2/828C2_L1_R1_001_2qn9FVAXuJdS.fastq.gz
+fa828C2_L1_R2=${data}/828_C2/828C2_L1_R2_001_2HC6cN9XiPwB.fastq.gz
+fa828C2_L2_R1=${data}/828_C2/828C2_L2_R1_001_mEHkebaaTPLm.fastq.gz
+fa828C2_L2_R2=${data}/828_C2/828C2_L2_R2_001_W9LyK6d9KkdU.fastq.gz
+fa828C3_L1_R1=${data}/828_C3/828C3_L1_R1_001_2sObxWvXwbj6.fastq.gz
+fa828C3_L1_R2=${data}/828_C3/828C3_L1_R2_001_tiIxD5saDFNJ.fastq.gz
+fa828C3_L2_R1=${data}/828_C3/828C3_L2_R1_001_ZtAljFbnP2gp.fastq.gz
+fa828C3_L2_R2=${data}/828_C3/828C3_L2_R2_001_MZdYIuLGuk0Z.fastq.gz
+
+#844 C 2021
+fa844C1_L1_R1=${data}/844C_1/844C1_L1_R1_001_vaUmNu514Bzh.fastq.gz
+fa844C1_L1_R2=${data}/844C_1/844C1_L1_R2_001_krUKwMrER9Dh.fastq.gz
+fa844C1_L2_R1=${data}/844C_1/844C1_L2_R1_001_7baBq6QheLQp.fastq.gz
+fa844C1_L2_R2=${data}/844C_1/844C1_L2_R2_001_YrAKLUzH70Hv.fastq.gz
+fa844C2_L1_R1=${data}/844_C2/844C2_L1_R1_001_cxuvCgbSzle5.fastq.gz
+fa844C2_L1_R2=${data}/844_C2/844C2_L1_R2_001_nFrRLngNXk69.fastq.gz
+fa844C2_L2_R1=${data}/844_C2/844C2_L2_R1_001_eGVziXCUU5nc.fastq.gz
+fa844C2_L2_R2=${data}/844_C2/844C2_L2_R2_001_lsVc74C5eDx0.fastq.gz
+fa844C3_L1_R1=${data}/844_C3/844C3_L1_R1_001_QHx5JcuIrij0.fastq.gz
+fa844C3_L1_R2=${data}/844_C3/844C3_L1_R2_001_wfrU3LJntHwu.fastq.gz
+fa844C3_L2_R1=${data}/844_C3/844C3_L2_R1_001_yPPs3NZg1wFi.fastq.gz
+fa844C3_L2_R2=${data}/844_C3/844C3_L2_R2_001_Ct6I2d89VMUc.fastq.gz
+
+
 #823 D 2021
 fa823D1_L1_R1_1=${data}/823D_1/823D1_L1_R1_001_Pz2hOidIcWnC.fastq.gz
 fa823D1_L1_R1_2=${data}/823D_1/823D1_L1_R1_001_ZUMePO9FW6GF.fastq.gz
@@ -183,29 +212,39 @@ salmon quant -i EISA_index -l A -1 ${fa366C2_L1_R1} ${fa366C2_L2_R1} -2 ${fa366C
 salmon quant -i EISA_index -l A -1 ${fa366C3_L1_R1} ${fa366C3_L2_R1} -2 ${fa366C3_L1_R2} ${fa366C3_L2_R2} --validateMappings -p 30 -o salmon_out/366C3 --seqBias --gcBias 
 
 #366 D 2021
-salmon quant -i EISA_index -l A -1 ${fa366D1_L1_R1} ${fa366D1_L2_R1} -2 ${fa366D1_L1_R2} ${fa366D1_L2_R2} --validateMappings -p 30 -o salmon_out/366D1 --seqBias --gcBias 
-salmon quant -i EISA_index -l A -1 ${fa366D2_L1_R1} ${fa366D2_L2_R1} -2 ${fa366D2_L1_R2} ${fa366D2_L2_R2} --validateMappings -p 30 -o salmon_out/366D2 --seqBias --gcBias 
-salmon quant -i EISA_index -l A -1 ${fa366D3_L1_R1} ${fa366D3_L2_R1} -2 ${fa366D3_L1_R2} ${fa366D3_L2_R2} --validateMappings -p 30 -o salmon_out/366D3 --seqBias --gcBias 
+#salmon quant -i EISA_index -l A -1 ${fa366D1_L1_R1} ${fa366D1_L2_R1} -2 ${fa366D1_L1_R2} ${fa366D1_L2_R2} --validateMappings -p 30 -o salmon_out/366D1 --seqBias --gcBias 
+#salmon quant -i EISA_index -l A -1 ${fa366D2_L1_R1} ${fa366D2_L2_R1} -2 ${fa366D2_L1_R2} ${fa366D2_L2_R2} --validateMappings -p 30 -o salmon_out/366D2 --seqBias --gcBias 
+#salmon quant -i EISA_index -l A -1 ${fa366D3_L1_R1} ${fa366D3_L2_R1} -2 ${fa366D3_L1_R2} ${fa366D3_L2_R2} --validateMappings -p 30 -o salmon_out/366D3 --seqBias --gcBias 
 
 #822 C 2021
-salmon quant -i EISA_index -l A -1 ${fa822C1_L1_R1} ${fa822C1_L2_R1} -2 ${fa822C1_L1_R2} ${fa822C1_L2_R2} --validateMappings -p 30 -o salmon_out/822C1 --seqBias --gcBias 
-salmon quant -i EISA_index -l A -1 ${fa822C2_L1_R1} ${fa822C2_L2_R1} -2 ${fa822C2_L1_R2} ${fa822C2_L2_R2} --validateMappings -p 30 -o salmon_out/822C2 --seqBias --gcBias 
-salmon quant -i EISA_index -l A -1 ${fa822C3_L1_R1} ${fa822C3_L2_R1} -2 ${fa822C3_L1_R2} ${fa822C3_L2_R2} --validateMappings -p 30 -o salmon_out/822C3 --seqBias --gcBias 
+#salmon quant -i EISA_index -l A -1 ${fa822C1_L1_R1} ${fa822C1_L2_R1} -2 ${fa822C1_L1_R2} ${fa822C1_L2_R2} --validateMappings -p 30 -o salmon_out/822C1 --seqBias --gcBias 
+#salmon quant -i EISA_index -l A -1 ${fa822C2_L1_R1} ${fa822C2_L2_R1} -2 ${fa822C2_L1_R2} ${fa822C2_L2_R2} --validateMappings -p 30 -o salmon_out/822C2 --seqBias --gcBias 
+#salmon quant -i EISA_index -l A -1 ${fa822C3_L1_R1} ${fa822C3_L2_R1} -2 ${fa822C3_L1_R2} ${fa822C3_L2_R2} --validateMappings -p 30 -o salmon_out/822C3 --seqBias --gcBias 
+
+#828 C 2021
+salmon quant -i EISA_index -l A -1 ${fa828C1_L1_R1} ${fa828C1_L2_R1} -2 ${fa828C1_L1_R2} ${fa828C1_L2_R2} --validateMappings -p 30 -o salmon_out/828C1 --seqBias --gcBias 
+salmon quant -i EISA_index -l A -1 ${fa828C2_L1_R1} ${fa828C2_L2_R1} -2 ${fa828C2_L1_R2} ${fa828C2_L2_R2} --validateMappings -p 30 -o salmon_out/828C2 --seqBias --gcBias 
+salmon quant -i EISA_index -l A -1 ${fa828C3_L1_R1} ${fa828C3_L2_R1} -2 ${fa828C3_L1_R2} ${fa828C3_L2_R2} --validateMappings -p 30 -o salmon_out/828C3 --seqBias --gcBias 
+
+#844 C 2021
+salmon quant -i EISA_index -l A -1 ${fa844C1_L1_R1} ${fa844C1_L2_R1} -2 ${fa844C1_L1_R2} ${fa844C1_L2_R2} --validateMappings -p 30 -o salmon_out/844C1 --seqBias --gcBias 
+salmon quant -i EISA_index -l A -1 ${fa844C2_L1_R1} ${fa844C2_L2_R1} -2 ${fa844C2_L1_R2} ${fa844C2_L2_R2} --validateMappings -p 30 -o salmon_out/844C2 --seqBias --gcBias 
+salmon quant -i EISA_index -l A -1 ${fa844C3_L1_R1} ${fa844C3_L2_R1} -2 ${fa844C3_L1_R2} ${fa844C3_L2_R2} --validateMappings -p 30 -o salmon_out/844C3 --seqBias --gcBias 
 
 #822 A 2021
-salmon quant -i EISA_index -l A -1 ${fa822A1_L1_R1} ${fa822A1_L2_R1} -2 ${fa822A1_L1_R2} ${fa822A1_L2_R2} --validateMappings -p 30 -o salmon_out/822A1 --seqBias --gcBias 
-salmon quant -i EISA_index -l A -1 ${fa822A2_L1_R1} ${fa822A2_L2_R1} -2 ${fa822A2_L1_R2} ${fa822A2_L2_R2} --validateMappings -p 30 -o salmon_out/822A2 --seqBias --gcBias 
-salmon quant -i EISA_index -l A -1 ${fa822A3_L1_R1} ${fa822A3_L2_R1} -2 ${fa822A3_L1_R2} ${fa822A3_L2_R2} --validateMappings -p 30 -o salmon_out/822A3 --seqBias --gcBias 
+#salmon quant -i EISA_index -l A -1 ${fa822A1_L1_R1} ${fa822A1_L2_R1} -2 ${fa822A1_L1_R2} ${fa822A1_L2_R2} --validateMappings -p 30 -o salmon_out/822A1 --seqBias --gcBias 
+#salmon quant -i EISA_index -l A -1 ${fa822A2_L1_R1} ${fa822A2_L2_R1} -2 ${fa822A2_L1_R2} ${fa822A2_L2_R2} --validateMappings -p 30 -o salmon_out/822A2 --seqBias --gcBias 
+#salmon quant -i EISA_index -l A -1 ${fa822A3_L1_R1} ${fa822A3_L2_R1} -2 ${fa822A3_L1_R2} ${fa822A3_L2_R2} --validateMappings -p 30 -o salmon_out/822A3 --seqBias --gcBias 
 
 #821 D 2021
-salmon quant -i EISA_index -l A -1 ${fa821D1_L1_R1} ${fa821D1_L2_R1} -2 ${fa821D1_L1_R2} ${fa821D1_L2_R2} --validateMappings -p 30 -o salmon_out/821D1 --seqBias --gcBias 
-salmon quant -i EISA_index -l A -1 ${fa821D2_L1_R1} ${fa821D2_L2_R1} -2 ${fa821D2_L1_R2} ${fa821D2_L2_R2} --validateMappings -p 30 -o salmon_out/821D2 --seqBias --gcBias 
-salmon quant -i EISA_index -l A -1 ${fa821D3_L1_R1} ${fa821D3_L2_R1} -2 ${fa821D3_L1_R2} ${fa821D3_L2_R2} --validateMappings -p 30 -o salmon_out/821D3 --seqBias --gcBias 
+#salmon quant -i EISA_index -l A -1 ${fa821D1_L1_R1} ${fa821D1_L2_R1} -2 ${fa821D1_L1_R2} ${fa821D1_L2_R2} --validateMappings -p 30 -o salmon_out/821D1 --seqBias --gcBias 
+#salmon quant -i EISA_index -l A -1 ${fa821D2_L1_R1} ${fa821D2_L2_R1} -2 ${fa821D2_L1_R2} ${fa821D2_L2_R2} --validateMappings -p 30 -o salmon_out/821D2 --seqBias --gcBias 
+#salmon quant -i EISA_index -l A -1 ${fa821D3_L1_R1} ${fa821D3_L2_R1} -2 ${fa821D3_L1_R2} ${fa821D3_L2_R2} --validateMappings -p 30 -o salmon_out/821D3 --seqBias --gcBias 
 
 #823 D 2021
-salmon quant -i EISA_index -l A -1 ${fa823D1_L1_R1_1} ${fa823D1_L1_R1_2} ${fa823D1_L2_R1_1} ${fa823D1_L2_R1_2} -2 ${fa823D1_L1_R2_1} ${fa823D1_L1_R2_2} ${fa823D1_L2_R2_1} ${fa823D1_L2_R2_2} --validateMappings -p 30 -o salmon_out/823D1 --seqBias --gcBias 
-salmon quant -i EISA_index -l A -1 ${fa823D2_L1_R1} ${fa823D2_L2_R1} -2 ${fa823D2_L1_R2} ${fa823D2_L2_R2} --validateMappings -p 30 -o salmon_out/823D2 --seqBias --gcBias 
-salmon quant -i EISA_index -l A -1 ${fa823D3_L1_R1} ${fa823D3_L2_R1} -2 ${fa823D3_L1_R2} ${fa823D3_L2_R2} --validateMappings -p 30 -o salmon_out/823D3 --seqBias --gcBias 
+#salmon quant -i EISA_index -l A -1 ${fa823D1_L1_R1_1} ${fa823D1_L1_R1_2} ${fa823D1_L2_R1_1} ${fa823D1_L2_R1_2} -2 ${fa823D1_L1_R2_1} ${fa823D1_L1_R2_2} ${fa823D1_L2_R2_1} ${fa823D1_L2_R2_2} --validateMappings -p 30 -o salmon_out/823D1 --seqBias --gcBias 
+#salmon quant -i EISA_index -l A -1 ${fa823D2_L1_R1} ${fa823D2_L2_R1} -2 ${fa823D2_L1_R2} ${fa823D2_L2_R2} --validateMappings -p 30 -o salmon_out/823D2 --seqBias --gcBias 
+#salmon quant -i EISA_index -l A -1 ${fa823D3_L1_R1} ${fa823D3_L2_R1} -2 ${fa823D3_L1_R2} ${fa823D3_L2_R2} --validateMappings -p 30 -o salmon_out/823D3 --seqBias --gcBias 
 
 
 conda deactivate

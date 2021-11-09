@@ -27,6 +27,8 @@ r775b=()
 r784b=()
 
 r366C=()
+r828C=()
+r844C=()
 r366D=()
 r821D=()
 r822A=()
@@ -50,6 +52,8 @@ for r in ${repCD[@]}; do
 	r822A+="822A${r} "
 	r822C+="822C${r} "
 	r823D+="823D${r} "
+	r828C+="828C${r}"
+	r844C+="844C${r}"
 done
 ### Build Feature-Gene correspondance table
 echo "Building Feature->GeneID correspondance table"
@@ -67,7 +71,7 @@ mkdir gen
 mkdir tx
 
 ### Build read count columns by sample / replicate
-for s in ${r366b[@]} ${r382b[@]} ${r775b[@]} ${r784b[@]} ${r366C[@]} ${r366D[@]} ${r821D[@]} ${r822A[@]} ${r822C[@]} ${r823D[@]}; do
+for s in ${r366b[@]} ${r382b[@]} ${r775b[@]} ${r784b[@]} ${r366C[@]} ${r366D[@]} ${r821D[@]} ${r822A[@]} ${r822C[@]} ${r828C[@]} ${r844C[@]} ${r823D[@]}; do
 	echo "Extracting read count from "${s}
 
 	echo ${s} > gen/${s} && awk 'NR==FNR{a[$1];next} $1 in a{print $5}' gene_gen_list.txt ${d}/${s}/quant.sf >> gen/${s}
@@ -84,6 +88,11 @@ echo "Building raw geneic/transcriptic count files"
 #${r366C[@]} ${r382b[@]}
 #WT2021aWT2020_vs_dpy26cs2020
 #${r366b[@]} ${r366C[@]} ${r382b[@]}
+#WT2020_vs_kle2_2020
+#${r366b[@]} ${r775b[@]}
+#WT2020_vs_scc1_2020
+#${r366b[@]} ${r784b[@]}
+
 #TIR1wtA_vs_TIR1sd3degA
 #${r823D[@]} ${r822A[@]}
 #TIR1sd3deg_vs_TIR1sd3degA
@@ -92,39 +101,41 @@ echo "Building raw geneic/transcriptic count files"
 #${r823D[@]} ${r821D[@]}
 #TIR1sd3deg_vs_dpy26TIR1sd3degA
 #${r822C[@]} ${r821D[@]}
+#WT2021_vs_coh1_2021
+#${r366C[@]} ${r828C[@]}
+#WT2021_vs_scc1coh1_2021
+#${r366C[@]} ${r844C[@]}
 
 # Paste together all the columns
 cd gen
-paste ../order_WBGenes_GE ${r366b[@]} ${r382b[@]} > ../order_WT2020_vs_dpy26cs2020_rawcounts_gene.txt
-paste ../order_WBGenes_GE ${r366C[@]} ${r382b[@]} > ../order_WT2021_vs_dpy26cs2020_rawcounts_gene.txt
-paste ../order_WBGenes_GE ${r366b[@]} ${r366C[@]} ${r382b[@]} > ../order_WT2021aWT2020_vs_dpy26cs2020_rawcounts_gene.txt
-paste ../order_WBGenes_GE ${r823D[@]} ${r822A[@]} > ../order_TIR1wtA_vs_TIR1sd3degA_rawcounts_gene.txt
-paste ../order_WBGenes_GE ${r822C[@]} ${r822A[@]} > ../order_TIR1sd3deg_vs_TIR1sd3degA_rawcounts_gene.txt
-paste ../order_WBGenes_GE ${r823D[@]} ${r821D[@]} > ../order_TIR1wtA_vs_dpy26TIR1sd3degA_rawcounts_gene.txt
-paste ../order_WBGenes_GE ${r822C[@]} ${r821D[@]} > ../order_TIR1sd3deg_vs_dpy26TIR1sd3degA_rawcounts_gene.txt
+paste ../order_WBGenes_GE ${r366b[@]} ${r382b[@]} > ../WT2020_vs_dpy26cs2020_rawcounts_gene.txt
+paste ../order_WBGenes_GE ${r366b[@]} ${r775b[@]} > ../WT2020_vs_kle2_2020_rawcounts_gene.txt
+paste ../order_WBGenes_GE ${r366b[@]} ${r784b[@]} > ../WT2020_vs_scc1_2020_rawcounts_gene.txt
+paste ../order_WBGenes_GE ${r366C[@]} ${r828C[@]} > ../WT2021_vs_coh1_2021_rawcounts_gene.txt
+paste ../order_WBGenes_GE ${r366C[@]} ${r844C[@]} > ../WT2021_vs_scc1coh1_2021_rawcounts_gene.txt
+#paste ../order_WBGenes_GE ${r366C[@]} ${r382b[@]} > ../WT2021_vs_dpy26cs2020_rawcounts_gene.txt
+#paste ../order_WBGenes_GE ${r366b[@]} ${r366C[@]} ${r382b[@]} > ../WT2021aWT2020_vs_dpy26cs2020_rawcounts_gene.txt
+#paste ../order_WBGenes_GE ${r823D[@]} ${r822A[@]} > ../TIR1wtA_vs_TIR1sd3degA_rawcounts_gene.txt
+#paste ../order_WBGenes_GE ${r822C[@]} ${r822A[@]} > ../TIR1sd3deg_vs_TIR1sd3degA_rawcounts_gene.txt
+#paste ../order_WBGenes_GE ${r823D[@]} ${r821D[@]} > ../TIR1wtA_vs_dpy26TIR1sd3degA_rawcounts_gene.txt
+#paste ../order_WBGenes_GE ${r822C[@]} ${r821D[@]} > ../TIR1sd3deg_vs_dpy26TIR1sd3degA_rawcounts_gene.txt
 
 
 cd ../tx
 paste ../order_WBGenes_Tx ${r366b[@]} ${r382b[@]} > ../WT2020_vs_dpy26cs2020_rawcounts_transcript.txt
-paste ../order_WBGenes_Tx ${r366C[@]} ${r382b[@]} > ../WT2021_vs_dpy26cs2020_rawcounts_transcript.txt
-paste ../order_WBGenes_Tx ${r366b[@]} ${r366C[@]} ${r382b[@]} > ../WT2021aWT2020_vs_dpy26cs2020_rawcounts_transcript.txt
-paste ../order_WBGenes_Tx ${r823D[@]} ${r822A[@]} > ../TIR1wtA_vs_TIR1sd3degA_rawcounts_transcript.txt
-paste ../order_WBGenes_Tx ${r822C[@]} ${r822A[@]} > ../TIR1sd3deg_vs_TIR1sd3degA_rawcounts_transcript.txt
-paste ../order_WBGenes_Tx ${r823D[@]} ${r821D[@]} > ../TIR1wtA_vs_dpy26TIR1sd3degA_rawcounts_transcript.txt
-paste ../order_WBGenes_Tx ${r822C[@]} ${r821D[@]} > ../TIR1sd3deg_vs_dpy26TIR1sd3degA_rawcounts_transcript.txt
+paste ../order_WBGenes_Tx ${r366b[@]} ${r775b[@]} > ../WT2020_vs_kle2_2020_rawcounts_transcript.txt
+paste ../order_WBGenes_Tx ${r366b[@]} ${r784b[@]} > ../WT2020_vs_scc1_2020_rawcounts_transcript.txt
+paste ../order_WBGenes_Tx ${r366C[@]} ${r828C[@]} > ../WT2021_vs_coh1_2021_rawcounts_transcript.txt
+paste ../order_WBGenes_Tx ${r366C[@]} ${r844C[@]} > ../WT2021_vs_scc1coh1_2021_rawcounts_transcript.txt
+#paste ../order_WBGenes_Tx ${r366C[@]} ${r382b[@]} > ../WT2021_vs_dpy26cs2020_rawcounts_transcript.txt
+#paste ../order_WBGenes_Tx ${r366b[@]} ${r366C[@]} ${r382b[@]} > ../WT2021aWT2020_vs_dpy26cs2020_rawcounts_transcript.txt
+#paste ../order_WBGenes_Tx ${r823D[@]} ${r822A[@]} > ../TIR1wtA_vs_TIR1sd3degA_rawcounts_transcript.txt
+#paste ../order_WBGenes_Tx ${r822C[@]} ${r822A[@]} > ../TIR1sd3deg_vs_TIR1sd3degA_rawcounts_transcript.txt
+#paste ../order_WBGenes_Tx ${r823D[@]} ${r821D[@]} > ../TIR1wtA_vs_dpy26TIR1sd3degA_rawcounts_transcript.txt
+#paste ../order_WBGenes_Tx ${r822C[@]} ${r821D[@]} > ../TIR1sd3deg_vs_dpy26TIR1sd3degA_rawcounts_transcript.txt
 
 
-cd ..
-sed 's/Gene://g' order_WT2020_vs_dpy26cs2020_rawcounts_gene.txt > WT2020_vs_dpy26cs2020_rawcounts_gene.txt
-sed 's/Gene://g' order_WT2021_vs_dpy26cs2020_rawcounts_gene.txt > WT2021_vs_dpy26cs2020_rawcounts_gene.txt
-sed 's/Gene://g' order_WT2021aWT2020_vs_dpy26cs2020_rawcounts_gene.txt > WT2021aWT2020_vs_dpy26cs2020_rawcounts_gene.txt
-sed 's/Gene://g' order_TIR1wtA_vs_TIR1sd3degA_rawcounts_gene.txt > TIR1wtA_vs_TIR1sd3degA_rawcounts_gene.txt
-sed 's/Gene://g' order_TIR1sd3deg_vs_TIR1sd3degA_rawcounts_gene.txt > TIR1sd3deg_vs_TIR1sd3degA_rawcounts_gene.txt
-sed 's/Gene://g' order_TIR1wtA_vs_dpy26TIR1sd3degA_rawcounts_gene.txt > TIR1wtA_vs_dpy26TIR1sd3degA_rawcounts_gene.txt
-sed 's/Gene://g' order_TIR1sd3deg_vs_dpy26TIR1sd3degA_rawcounts_gene.txt > TIR1sd3deg_vs_dpy26TIR1sd3degA_rawcounts_gene.txt
-
-mv *raw* ..
 # Clean up
-cd ..
-rm order*
+cd ../..
+mv tmp/*rawcounts* .
 rm -r tmp
