@@ -1,10 +1,10 @@
 #! /bin/bash
 
 ## Resource Allocation
-#SBATCH --time=3-00:00:00
-#SBATCH --partition=gpu
+#SBATCH --time=1-00:00:00
+#SBATCH --partition=local
 #SBATCH --mem=64G
-#SBATCH –-ntasks=30
+#SBATCH --cpus-per-task=30
 
 #SBATCH --mail-user=ahrmad.annan@students.unibe.ch
 #SBATCH --mail-type=end,fail
