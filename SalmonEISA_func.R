@@ -105,12 +105,15 @@ scatter_deltas_X <- function(delta.cnt,delta.cnt_X,conditions) {
   t <- round(max(layer_scales(plt)$y$range$range[2],layer_scales(plt)$x$range$range[2]),1)
   s <- round(min(layer_scales(plt)$y$range$range[1],layer_scales(plt)$x$range$range[1]),1)
   
+  s <- -6.5
+  t <- 9.3
+  
   plt <- plt + coord_equal(xlim=c(s,t), ylim=c(s,t)) + 
     geom_segment(aes(x = s, y = s,xend = t, yend = t),size = 0.2) +
     theme(plot.margin = unit(c(-1,-2,0.3,-2), "cm"))
   
   plt
-  #ggsave(paste0(exp_cond,".svg"), plot = plt)
+  ggsave(paste0(exp_cond,".svg"), plot = plt)
 }
 
 ### ALL ###
@@ -135,7 +138,7 @@ SalmonEISA <- function(geFile, txFile, gene_table, conditions) {
   cntEx.norm <- as.data.frame(t(mean(colSums(cntEx))*t(cntEx)/colSums(cntEx)))
   cntIn.norm <- as.data.frame(t(mean(colSums(cntIn))*t(cntIn)/colSums(cntIn)))
   
-  genes.sel <- rowSums(cntIn.norm != 0)>=7 & rowSums(cntEx.norm != 0)>=7 & rowMeans(log2(cntEx.norm+8))>=5 & rowMeans(log2(cntIn.norm+8))>=5 #32(24) 
+  genes.sel <- rowSums(cntIn.norm != 0)>=(ncol(cntIn)-1) & rowSums(cntEx.norm != 0)>=(ncol(cntEx)-1) & rowMeans(log2(cntEx.norm+8))>=5 & rowMeans(log2(cntIn.norm+8))>=5 #32(24) 
   #4.321928 #20 (12)
   
   # Keep counts only of genes with sufficient exonic and intronic counts (genes.sel)

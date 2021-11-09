@@ -8,7 +8,6 @@ source("/Users/aa/Documents/GitHub/SalmonEISA/SalmonEISA_func.R")
 # input files and parameters
 gene_table <- "wormbase/c_elegans.PRJNA13758.WS279.TableGeneIDs.tsv"
 
-SalmonEISA(gene_table=gene_table,geFile="rawcounts/ALL_GT/WT2020_vs_dpy26cs2020_rawcounts_gene.txt",txFile="rawcounts/ALL_GT/WT2020_vs_dpy26cs2020_rawcounts_transcript.txt",conditions=c("WT","WT","WT","WT","dpy26","dpy26","dpy26","dpy26"))
 SalmonEISA(gene_table=gene_table,geFile="rawcounts/REST_ALL/WT2020_vs_dpy26cs2020_rawcounts_gene.txt",txFile="rawcounts/REST_ALL/WT2020_vs_dpy26cs2020_rawcounts_transcript.txt",conditions=c("WT","WT","WT","WT","dpy26","dpy26","dpy26","dpy26"))
 
 SalmonEISA(gene_table=gene_table,geFile="rawcounts/REST_ALL/WT2020_vs_kle2_2020_rawcounts_gene.txt",txFile="rawcounts/REST_ALL/WT2020_vs_kle2_2020_rawcounts_transcript.txt",conditions=c("WT","WT","WT","WT","kle2","kle2","kle2","kle2"))
