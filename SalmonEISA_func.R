@@ -112,8 +112,8 @@ scatter_deltas_X <- function(delta.cnt,delta.cnt_X,conditions) {
     geom_segment(aes(x = s, y = s,xend = t, yend = t),size = 0.2) +
     theme(plot.margin = unit(c(-1,-2,0.3,-2), "cm"))
   
-  plt
-  ggsave(paste0(exp_cond,".svg"), plot = plt)
+  #plt
+  ggsave(paste0(exp_cond,".svg"), plot = plt, units = c("cm"))
 }
 
 ### ALL ###

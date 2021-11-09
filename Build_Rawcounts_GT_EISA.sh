@@ -101,6 +101,9 @@ echo "Building raw geneic/transcriptic count files"
 #${r823D[@]} ${r821D[@]}
 #TIR1sd3deg_vs_dpy26TIR1sd3degA
 #${r822C[@]} ${r821D[@]}
+#TIR1sd3degA_vs_dpy26TIR1sd3degA
+#${r822A[@]} ${r821D[@]}
+
 #WT2021_vs_coh1_2021
 #${r366C[@]} ${r828C[@]}
 #WT2021_vs_scc1coh1_2021
@@ -119,7 +122,7 @@ paste ../order_WBGenes_GE ${r366C[@]} ${r844C[@]} > ../WT2021_vs_scc1coh1_2021_r
 #paste ../order_WBGenes_GE ${r822C[@]} ${r822A[@]} > ../TIR1sd3deg_vs_TIR1sd3degA_rawcounts_gene.txt
 #paste ../order_WBGenes_GE ${r823D[@]} ${r821D[@]} > ../TIR1wtA_vs_dpy26TIR1sd3degA_rawcounts_gene.txt
 #paste ../order_WBGenes_GE ${r822C[@]} ${r821D[@]} > ../TIR1sd3deg_vs_dpy26TIR1sd3degA_rawcounts_gene.txt
-
+#paste ../order_WBGenes_GE ${r822A[@]} ${r821D[@]} > ../TIR1sd3degA_vs_dpy26TIR1sd3degA_rawcounts_gene.txt
 
 cd ../tx
 paste ../order_WBGenes_Tx ${r366b[@]} ${r382b[@]} > ../WT2020_vs_dpy26cs2020_rawcounts_transcript.txt
@@ -133,7 +136,7 @@ paste ../order_WBGenes_Tx ${r366C[@]} ${r844C[@]} > ../WT2021_vs_scc1coh1_2021_r
 #paste ../order_WBGenes_Tx ${r822C[@]} ${r822A[@]} > ../TIR1sd3deg_vs_TIR1sd3degA_rawcounts_transcript.txt
 #paste ../order_WBGenes_Tx ${r823D[@]} ${r821D[@]} > ../TIR1wtA_vs_dpy26TIR1sd3degA_rawcounts_transcript.txt
 #paste ../order_WBGenes_Tx ${r822C[@]} ${r821D[@]} > ../TIR1sd3deg_vs_dpy26TIR1sd3degA_rawcounts_transcript.txt
-
+#paste ../order_WBGenes_Tx ${r822A[@]} ${r821D[@]} > ../TIR1sd3degA_vs_dpy26TIR1sd3degA_rawcounts_transcript.txt
 
 # Clean up
 cd ../..

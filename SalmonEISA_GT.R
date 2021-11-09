@@ -20,6 +20,8 @@ SalmonEISA(gene_table=gene_table,geFile="rawcounts/ALL_GT/TIR1sd3deg_vs_TIR1sd3d
 SalmonEISA(gene_table=gene_table,geFile="rawcounts/ALL_GT/TIR1wtA_vs_dpy26TIR1sd3degA_rawcounts_gene.txt",txFile="rawcounts/ALL_GT/TIR1wtA_vs_dpy26TIR1sd3degA_rawcounts_transcript.txt",conditions=c("TIR1wtA","TIR1wtA","TIR1wtA","dpy26TIR1sd3degA","dpy26TIR1sd3degA","dpy26TIR1sd3degA"))
 SalmonEISA(gene_table=gene_table,geFile="rawcounts/ALL_GT/TIR1wtA_vs_TIR1sd3degA_rawcounts_gene.txt",txFile="rawcounts/ALL_GT/TIR1wtA_vs_TIR1sd3degA_rawcounts_transcript.txt",conditions=c("TIR1wtA","TIR1wtA","TIR1wtA","TIR1sd3degA","TIR1sd3degA","TIR1sd3degA"))
 
+SalmonEISA(gene_table=gene_table,geFile="rawcounts/ALL_GT/TIR1sd3degA_vs_dpy26TIR1sd3degA_rawcounts_gene.txt",txFile="rawcounts/ALL_GT/TIR1sd3degA_vs_dpy26TIR1sd3degA_rawcounts_transcript.txt",conditions=c("TIR1sd3degA","TIR1sd3degA","TIR1sd3degA","dpy26TIR1sd3degA","dpy26TIR1sd3degA","dpy26TIR1sd3degA"))
+
 #SalmonEISA(gene_table,"WT2021aWT2020_vs_dpy26cs2020_rawcounts_gene.txt","WT2021aWT2020_vs_dpy26cs2020_rawcounts_transcript.txt",c("WT","WT","WT","WT","WT","WT","WT","exp","exp","exp","exp"),c(1,1,1,1,1,1,1,2,2,2,2),"WT2021aWT2020-dpy26cs2020")
 #SalmonEISA(gene_table,"WT2021_vs_dpy26cs2020_rawcounts_gene.txt","WT2021_vs_dpy26cs2020_rawcounts_transcript.txt",c("WT","WT","WT","exp","exp","exp","exp"),c(1,1,1,2,2,2,2),"WT2021-dpy26cs2020")
 
