@@ -135,7 +135,7 @@ SalmonEISA <- function(geFile, txFile, gene_table, conditions) {
   cntEx.norm <- as.data.frame(t(mean(colSums(cntEx))*t(cntEx)/colSums(cntEx)))
   cntIn.norm <- as.data.frame(t(mean(colSums(cntIn))*t(cntIn)/colSums(cntIn)))
   
-  genes.sel <- rowMeans(log2(cntEx.norm+8))>=5 & rowMeans(log2(cntIn.norm+8))>=5 #32(24) 
+  genes.sel <- rowSums(cntIn.norm != 0)>=7 & rowSums(cntEx.norm != 0)>=7 & rowMeans(log2(cntEx.norm+8))>=5 & rowMeans(log2(cntIn.norm+8))>=5 #32(24) 
   #4.321928 #20 (12)
   
   # Keep counts only of genes with sufficient exonic and intronic counts (genes.sel)
@@ -155,5 +155,5 @@ SalmonEISA <- function(geFile, txFile, gene_table, conditions) {
   scatter_deltas_X(delta.cnt, delta.cnt.X, conditions)
   
   #Looking for outlier genes on the scatter plot
-  #print(delta.cnt[delta.cnt$dIntron <= -10 & delta.cnt$dExon >= -5 ,])
+  #print(delta.cnt[delta.cnt$dIntron <= -1 & delta.cnt$dExon >= -5 ,])
 }
