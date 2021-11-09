@@ -110,7 +110,7 @@ scatter_deltas_X <- function(delta.cnt,delta.cnt_X,conditions) {
     theme(plot.margin = unit(c(-1,-2,0.3,-2), "cm"))
   
   plt
-  ggsave(paste0(exp_cond,".svg"), plot = plt)
+  #ggsave(paste0(exp_cond,".svg"), plot = plt)
 }
 
 ### ALL ###
@@ -155,5 +155,5 @@ SalmonEISA <- function(geFile, txFile, gene_table, conditions) {
   scatter_deltas_X(delta.cnt, delta.cnt.X, conditions)
   
   #Looking for outlier genes on the scatter plot
-  #delta.cnt.edgeR[delta.cnt.edgeR$dIntron>6 | delta.cnt.edgeR$dExon>5 ,]
+  #print(delta.cnt[delta.cnt$dIntron <= -10 & delta.cnt$dExon >= -5 ,])
 }

@@ -52,8 +52,8 @@ for r in ${repCD[@]}; do
 	r822A+="822A${r} "
 	r822C+="822C${r} "
 	r823D+="823D${r} "
-	r828C+="828C${r}"
-	r844C+="844C${r}"
+	r828C+="828C${r} "
+	r844C+="844C${r} "
 done
 ### Build Feature-Gene correspondance table
 echo "Building Feature->GeneID correspondance table"
