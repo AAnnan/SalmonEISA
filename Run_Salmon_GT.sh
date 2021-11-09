@@ -3,8 +3,8 @@
 ## Resource Allocation
 #SBATCH --time=4-00:00:00
 #SBATCH --partition=local
-#SBATCH --mem=96G
-#SBATCH --ntasks=24
+#SBATCH --mem=48G
+#SBATCH --ntasks=30
 
 #SBATCH --mail-user=ahrmad.annan@students.unibe.ch
 #SBATCH --mail-type=end,fail
@@ -14,7 +14,7 @@ source ${CONDA_ACTIVATE} salmon
 
 cat c_elegans.PRJNA13758.WS279.mRNA_transcripts.fa CE_genes_seq.fa c_elegans.PRJNA13758.WS279.genomic.fa > CE_gentrome.fa
 
-salmon index -p 24 -t CE_gentrome.fa -i EISA_index --decoys decoys.txt -k 19
+salmon index -p 30 -t CE_gentrome.fa -i EISA_index --decoys decoys.txt -k 19
 #the k size selected here will act as the minimum acceptable length for a valid match.
 
 ########################################################################################################################
