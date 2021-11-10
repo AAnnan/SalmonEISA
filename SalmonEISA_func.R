@@ -91,22 +91,23 @@ scatter_deltas_X <- function(delta.cnt,delta.cnt_X,conditions) {
   exp_cond <- paste(rev(unique(conditions)), collapse=' - ' )
   
   plt <- ggplot() + 
-    geom_point(data=delta.cnt, mapping=aes(x=dIntron, y=dExon, color = "Autosomal\ngenes"), alpha=0.5, size=1) +
-    geom_point(data=delta.cnt_X, mapping=aes(x=dIntron, y=dExon, color = "X genes"), alpha=0.5, size=1) +
+    geom_point(data=delta.cnt, mapping=aes(x=dIntron, y=dExon, color = "Autosomal\ngenes"), alpha=0.6, size=1) +
+    geom_point(data=delta.cnt_X, mapping=aes(x=dIntron, y=dExon, color = "X genes"), alpha=0.6, size=1) +
     ggtitle(paste0(exp_cond,'\n\nR = ',corEvI), subtitle = paste0('R = ',corEvI_X)) +
     scale_colour_manual(name = NULL, values = c("X genes"="red","Autosomal\ngenes"="black")) +
     labs(x= "\u0394Intron",    # works fine
          y= "\u0394Exon") +  # works fine
     theme_bw() +
-    theme(aspect.ratio=1, panel.grid.minor = element_blank()) +
+    theme(aspect.ratio=1, panel.border = element_blank(), panel.grid.major = element_blank(),
+          panel.grid.minor = element_blank(), axis.line = element_line(colour = "black")) +
     theme(plot.title=element_text(size=12, face="italic", margin = margin(t=45, b = -40)),
           plot.subtitle=element_text(size=12, face="italic", color="red", margin = margin(t=45, b = -40)))
   
   t <- round(max(layer_scales(plt)$y$range$range[2],layer_scales(plt)$x$range$range[2]),1)
   s <- round(min(layer_scales(plt)$y$range$range[1],layer_scales(plt)$x$range$range[1]),1)
   
-  s <- -6.5
-  t <- 9.3
+  s <- -6.3
+  t <- 6.3
   
   plt <- plt + coord_equal(xlim=c(s,t), ylim=c(s,t)) + 
     geom_segment(aes(x = s, y = s,xend = t, yend = t),size = 0.2) +
@@ -138,7 +139,7 @@ SalmonEISA <- function(geFile, txFile, gene_table, conditions) {
   cntEx.norm <- as.data.frame(t(mean(colSums(cntEx))*t(cntEx)/colSums(cntEx)))
   cntIn.norm <- as.data.frame(t(mean(colSums(cntIn))*t(cntIn)/colSums(cntIn)))
   
-  genes.sel <- rowSums(cntIn.norm != 0)>=(ncol(cntIn)-1) & rowSums(cntEx.norm != 0)>=(ncol(cntEx)-1) & rowMeans(log2(cntEx.norm+8))>=5 & rowMeans(log2(cntIn.norm+8))>=5 #32(24) 
+  genes.sel <- rowSums(cntIn.norm != 0)>=(ncol(cntIn)) & rowSums(cntEx.norm != 0)>=(ncol(cntEx)) & rowMeans(log2(cntEx.norm+8))>=5 & rowMeans(log2(cntIn.norm+8))>=5 #32(24) 
   #4.321928 #20 (12)
   
   # Keep counts only of genes with sufficient exonic and intronic counts (genes.sel)
