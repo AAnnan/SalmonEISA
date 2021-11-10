@@ -91,10 +91,10 @@ scatter_deltas_X <- function(delta.cnt,delta.cnt_X,conditions) {
   exp_cond <- paste(rev(unique(conditions)), collapse=' - ' )
   
   plt <- ggplot() + 
-    geom_point(data=delta.cnt, mapping=aes(x=dIntron, y=dExon, color = "Autosomal\ngenes"), alpha=0.6, size=1) +
+    geom_point(data=delta.cnt, mapping=aes(x=dIntron, y=dExon, color = "Autosomal genes"), alpha=0.6, size=1) +
     geom_point(data=delta.cnt_X, mapping=aes(x=dIntron, y=dExon, color = "X genes"), alpha=0.6, size=1) +
     ggtitle(paste0(exp_cond,'\n\nR = ',corEvI), subtitle = paste0('R = ',corEvI_X)) +
-    scale_colour_manual(name = NULL, values = c("X genes"="red","Autosomal\ngenes"="black")) +
+    scale_colour_manual(name = NULL, values = c("X genes"="red","Autosomal genes"="black")) +
     labs(x= "\u0394Intron",    # works fine
          y= "\u0394Exon") +  # works fine
     theme_bw() +
