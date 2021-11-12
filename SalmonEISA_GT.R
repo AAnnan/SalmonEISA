@@ -9,11 +9,11 @@ source("/Users/aa/Documents/GitHub/SalmonEISA/SalmonEISA_func.R")
 
 # input files and parameters
 gene_table <- "wormbase/c_elegans.PRJNA13758.WS279.TableGeneIDs.tsv"
-txFile <- "rawcounts/GROseq_RNAseq/rawcounts_transcript.txt"
-geFile <- "rawcounts/GROseq_RNAseq/rawcounts_gene.txt"
+txFile <- "rawcounts/GROseq_RNAseq2019/rawcounts_transcript.txt"
+geFile <- "rawcounts/GROseq_RNAseq2019/rawcounts_gene.txt"
 
-gro_txFile <- "rawcounts/GROseq_RNAseq/rawcounts_transcript_gro.txt"
-gro_geFile <- "rawcounts/GROseq_RNAseq/rawcounts_gene_gro.txt"
+gro_txFile <- "rawcounts/GROseq_RNAseq2019/rawcounts_transcript_gro.txt"
+gro_geFile <- "rawcounts/GROseq_RNAseq2019/rawcounts_gene_gro.txt"
 ctrlRNAi <- TRUE
 chrm = "all"
 
@@ -33,7 +33,8 @@ prepoc_cnt <- function(geFile, txFile, gene_table) {
   cntIn.norm <- as.data.frame(t(mean(colSums(cntIn))*t(cntIn)/colSums(cntIn))) # normalize samples to avearge sequencing depth for introns
   
   #genes.sel <- rowMeans(log2(cntEx.norm+8))>=4.321928 & rowMeans(log2(cntIn.norm+8))>=4.321928 #20 (12)
-  genes.sel <- rowMeans(log2(cntEx.norm+8))>=5 & rowMeans(log2(cntIn.norm+8))>=5 #32(24)
+  #genes.sel <- rowMeans(log2(cntEx.norm+8))>=5 & rowMeans(log2(cntIn.norm+8))>=5 #32(24)
+  genes.sel <- rowSums(cntIn.norm != 0)>=(ncol(cntIn)-1) & rowSums(cntEx.norm != 0)>=(ncol(cntEx)-1) & rowMeans(log2(cntEx.norm+8))>=5 & rowMeans(log2(cntIn.norm+8))>=5 #32(24) 
   
   # Keep counts only of genes with sufficient exonic and intronic counts (genes.sel)
   cntEx <- cntEx[genes.sel,]
@@ -68,7 +69,9 @@ gro_cnt <- gro_cntEx + gro_cntIn
 gro_cnt.norm <- as.data.frame(t(mean(colSums(gro_cnt))*t(gro_cnt)/colSums(gro_cnt))) # normalize samples to avearge sequencing depth for exons
 
 #gro_genes.sel <- rowMeans(log2(gro_cnt.norm+8))>=4.321928 #20 (12)
-gro_genes.sel <- rowMeans(log2(gro_cnt.norm+8))>=5 #32 (24)
+gro_genes.sel <- rowSums(gro_cnt.norm != 0)>=(ncol(gro_cnt.norm)-1) & rowMeans(log2(gro_cnt.norm+8))>=5#32(24) 
+
+#gro_genes.sel <- rowMeans(log2(gro_cnt.norm+8))>=5 #32 (24)
 
 # Keep counts only of genes with sufficient exonic and intronic counts (genes.sel)
 gro_cnt <- gro_cnt[gro_genes.sel,]
@@ -76,9 +79,9 @@ gro_cnt.norm <- gro_cnt.norm[gro_genes.sel,]
 
 # edgeR workflow
 #conditions <- c("366","366","366","366","382","382","382","382")
-conditions <- c("WT","WT","WT","WT","sdc2RNAi","sdc2RNAi","sdc2RNAi")
+conditions <- c("WT","WT","WT","WT","WT","sdc2RNAi","sdc2RNAi","sdc2RNAi")
 factorCondition <- factor(conditions, levels=unique(conditions)) # define experimental factor 'conditions'
-group <- c(1,1,1,1,2,2,2)
+group <- c(1,1,1,1,1,2,2,2)
 
 gro_conditions <- c("WT", "WT","sdc2RNAi","sdc2RNAi")
 gro_factorCondition <- factor(gro_conditions, levels=unique(gro_conditions)) # define experimental factor 'conditions'

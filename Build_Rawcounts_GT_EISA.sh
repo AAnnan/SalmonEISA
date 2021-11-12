@@ -2,7 +2,7 @@
 
 ## Resource Allocation
 #SBATCH --time=2-00:00:00
-#SBATCH --partition=gpu
+#SBATCH --partition=local
 #SBATCH --mem=32G
 #SBATCH –-cpus-per-task=4
 
@@ -11,12 +11,12 @@
 #SBATCH --job-name="file_prep_Salmon"
 
 ## Run in folder containing: 
-# EISA_23_09_2021_GT with Salmon input (multifastas) and outpt (salmon_out)
+# Salmon input (multifastas) and outpt (salmon_out)
 
 # Variable names for file paths
 d="../salmon_out"
 
-rna_sample=(N2_RNAseq_ctrl_1 N2_RNAseq_ctrl_2 N2_RNAseq_ctrl_3 N2_RNAseq_ctrl_4 RNAseq_sdc2_1 RNAseq_sdc2_2 RNAseq_sdc2_3)
+rna_sample=(N2_RNAseq_ctrl_1 N2_RNAseq_ctrl_2 N2_RNAseq_ctrl_3 N2_RNAseq_ctrl_4 N2_RNAseq_ctrl_5 RNAseq_sdc2_1 RNAseq_sdc2_2 RNAseq_sdc2_3)
 gro_sample=(N2_GROseq_ctrl_1 N2_GROseq_ctrl_2 N2_GROseq_ctrlRNAi_1 N2_GROseq_ctrlRNAi_2 GROseq_sdc2_1 GROseq_sdc2_2)
 
 ### Build Feature-Gene correspondance table
@@ -55,18 +55,14 @@ echo "Building raw geneic/transcriptic count files"
 
 # Paste together all the columns
 cd gen
-paste ../order_WBGenes_GE ${rna_sample[@]} > ../order_rawcounts_gene.txt
-paste ../order_WBGenes_GE ${gro_sample[@]} > ../order_rawcounts_gene_gro.txt
+paste ../order_WBGenes_GE ${rna_sample[@]} > ../rawcounts_gene.txt
+paste ../order_WBGenes_GE ${gro_sample[@]} > ../rawcounts_gene_gro.txt
 
 cd ../tx
 paste ../order_WBGenes_Tx ${rna_sample[@]} > ../rawcounts_transcript.txt
 paste ../order_WBGenes_Tx ${gro_sample[@]} > ../rawcounts_transcript_gro.txt
 
-cd ..
-sed 's/Gene://g' order_rawcounts_gene_gro.txt > rawcounts_gene_gro.txt
-sed 's/Gene://g' order_rawcounts_gene.txt > rawcounts_gene.txt
-
-mv raw* ..
 # Clean up
-cd ..
+cd ../..
+mv tmp/raw* .
 rm -r tmp
