@@ -105,6 +105,9 @@ scatter_deltas_X <- function(delta.cnt,delta.cnt_X,conditions) {
   t <- round(max(layer_scales(plt)$y$range$range[2],layer_scales(plt)$x$range$range[2]),1)
   s <- round(min(layer_scales(plt)$y$range$range[1],layer_scales(plt)$x$range$range[1]),1)
   
+  s <- -6.3
+  t <- 6.3
+  
   plt <- plt + coord_equal(xlim=c(s,t), ylim=c(s,t)) + 
     geom_segment(aes(x = s, y = s,xend = t, yend = t),size = 0.2) +
     theme(plot.margin = unit(c(-1,-2,0.3,-2), "cm"))

@@ -7,10 +7,10 @@ source("/Users/aa/Documents/GitHub/SalmonEISA/SalmonEISA_func.R")
 
 ##### Files (counts, geneTable) and parameters (EdgeR)
 gene_table <- "wormbase/c_elegans.PRJNA13758.WS279.TableGeneIDs.tsv"
-txFile <- "rawcounts/REST_ALL/WT2020_vs_dpy26cs2020_rawcounts_transcript.txt"
-geFile <- "rawcounts/REST_ALL/WT2020_vs_dpy26cs2020_rawcounts_gene.txt"
+txFile <- "rawcounts/ALL_GT/TIR1wtA_vs_TIR1sd3degA_rawcounts_transcript.txt"
+geFile <- "rawcounts/ALL_GT/TIR1wtA_vs_TIR1sd3degA_rawcounts_gene.txt"
 
-conditions <- c("WT","WT","WT","WT","dpy26","dpy26","dpy26","dpy26")
+conditions <- c("WT","WT","WT","sdc3","sdc3","sdc3")
 #######
 
 
@@ -35,7 +35,7 @@ cntEx <- get_names(cntEx, gene_table)
 cntEx.norm <- as.data.frame(t(mean(colSums(cntEx))*t(cntEx)/colSums(cntEx)))
 cntIn.norm <- as.data.frame(t(mean(colSums(cntIn))*t(cntIn)/colSums(cntIn)))
 
-genes.sel <- rowSums(cntIn.norm != 0)>=(ncol(cntIn)-1) & rowSums(cntEx.norm != 0)>=(ncol(cntEx)-1) & rowMeans(log2(cntEx.norm+8))>=5 & rowMeans(log2(cntIn.norm+8))>=5 #32(24) 
+genes.sel <- rowSums(cntIn.norm != 0)>=(ncol(cntIn)) & rowSums(cntEx.norm != 0)>=(ncol(cntEx)) & rowMeans(log2(cntEx.norm+8))>=5 & rowMeans(log2(cntIn.norm+8))>=5 #32(24) 
 #4.321928 #20 (12)
 
 # Keep counts only of genes with sufficient exonic and intronic counts (genes.sel)
@@ -55,4 +55,4 @@ delta.cnt.X <- sel_chrom(delta.cnt, gene_table, "X")
 scatter_deltas_X(delta.cnt, delta.cnt.X, conditions)
 
 #Looking for outlier genes on the scatter plot
-#print(delta.cnt[delta.cnt$dIntron <= -1 & delta.cnt$dExon >= -5 ,])
+print(delta.cnt[delta.cnt$dIntron <= -2 & abs(delta.cnt$dExon) <= 2 ,])
