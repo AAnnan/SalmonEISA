@@ -56,10 +56,10 @@ echo "Building raw geneic/transcriptic count files"
 
 # Paste together all the columns
 cd gen
-paste ../order_WBGenes_GE ${r366b[@]} ${r382b[@]} > ../order_WT2020_vs_dpy26cs2020_rawcounts_gene.txt
+paste ../order_WBGenes_GE ${r366b[@]} ${r382b[@]} > ../WT2020_vs_dpy26cs2020_rawcounts_gene.txt
 
 cd ../tx
-paste ../order_WBGenes_Tx ${r366b[@]} ${r382b[@]} > ../WT2020_vs_dpy26cs2020_rawcounts_transcript.tx
+paste ../order_WBGenes_Tx ${r366b[@]} ${r382b[@]} > ../WT2020_vs_dpy26cs2020_rawcounts_transcript.txt
 
 # Clean up
 mv *raw* ..
