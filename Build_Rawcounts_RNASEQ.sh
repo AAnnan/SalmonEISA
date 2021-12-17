@@ -51,19 +51,15 @@ mkdir tmp
 cd tmp
 # Extract the gene/transcript number and its corresponding gene ID
 grep '>' ../c_elegans.PRJNA13758.WS279.mRNA_transcripts.fa | sed 's/>//g' | sed 's/gene=//g' > gene_tx_list.txt
-grep '>' ../CE_genes_seq.fa | sed 's/>//g' > gene_gen_list.txt
 
-echo "Gene_IDs" > order_WBGenes_GE && awk 'NR==FNR{a[$1];next} $1 in a{print $1}' ${d}/AMA_1/quant.sf gene_gen_list.txt >> order_WBGenes_GE
 echo "Gene_IDs" > order_WBGenes_Tx && awk 'NR==FNR{a[$1];next} $1 in a{print $2}' ${d}/AMA_1/quant.sf gene_tx_list.txt >> order_WBGenes_Tx
 
-mkdir gen
 mkdir tx
 
 ### Build read count columns by sample / replicate
 for s in ${rAMA[@]} ${rFLAVO[@]} ${rN2[@]} ${rTIR1m[@]} ${rTOP1m[@]} ${rTOP2m[@]} ${rTIR1p[@]} ${rTOP1p[@]} ${rTOP2p[@]} ; do
 	echo "Extracting read count from "${s}
 
-	echo ${s} > gen/${s} && awk 'NR==FNR{a[$1];next} $1 in a{print $5}' gene_gen_list.txt ${d}/${s}/quant.sf >> gen/${s}
 	echo ${s} > tx/${s} && awk 'NR==FNR{a[$1];next} $1 in a{print $5}' gene_tx_list.txt ${d}/${s}/quant.sf >> tx/${s}
 done
 
@@ -87,26 +83,18 @@ echo "Building raw geneic/transcriptic count files"
 #${rTIR1m[@]} ${rTIR1p[@]}
 
 # Paste together all the columns
-cd gen
-paste ../order_WBGenes_GE ${rN2[@]} ${rAMA[@]} > ../N2_vs_AMA_rawcounts_gene.txt
-paste ../order_WBGenes_GE ${rN2[@]} ${rFLAVO[@]} > ../N2_vs_FLAVO_rawcounts_gene.txt
-paste ../order_WBGenes_GE ${rN2[@]} ${rTIR1m[@]} > ../N2_vs_TIR1m_rawcounts_gene.txt
-paste ../order_WBGenes_GE ${rN2[@]} ${rTIR1p[@]} > ../N2_vs_TIR1p_rawcounts_gene.txt
-paste ../order_WBGenes_GE ${rTOP1m[@]} ${rTOP1p[@]} > ../TOP1m_vs_TOP1p_rawcounts_gene.txt
-paste ../order_WBGenes_GE ${rTOP2m[@]} ${rTOP2p[@]} > ../TOP2m_vs_TOP2p_rawcounts_gene.txt
-paste ../order_WBGenes_GE ${rTIR1m[@]} ${rTIR1p[@]} > ../TIR1m_vs_TIR1p_rawcounts_gene.txt
 
-cd ../tx
-paste ../order_WBGenes_Tx ${rN2[@]} ${rAMA[@]} > ../N2_vs_AMA_rawcounts_transcript.txt
-paste ../order_WBGenes_Tx ${rN2[@]} ${rFLAVO[@]} > ../N2_vs_FLAVO_rawcounts_transcript.txt
-paste ../order_WBGenes_Tx ${rN2[@]} ${rTIR1m[@]} > ../N2_vs_TIR1m_rawcounts_transcript.txt
-paste ../order_WBGenes_Tx ${rN2[@]} ${rTIR1p[@]} > ../N2_vs_TIR1p_rawcounts_transcript.txt
-paste ../order_WBGenes_Tx ${rTOP1m[@]} ${rTOP1p[@]} > ../TOP1m_vs_TOP1p_rawcounts_transcript.txt
-paste ../order_WBGenes_Tx ${rTOP2m[@]} ${rTOP2p[@]} > ../TOP2m_vs_TOP2p_rawcounts_transcript.txt
-paste ../order_WBGenes_Tx ${rTIR1m[@]} ${rTIR1p[@]} > ../TIR1m_vs_TIR1p_rawcounts_transcript.txt
+cd tx
+paste ../order_WBGenes_Tx ${rN2[@]} ${rAMA[@]} > ../N2_vs_AMA_rawcounts_tx_RNASEQ.txt
+paste ../order_WBGenes_Tx ${rN2[@]} ${rFLAVO[@]} > ../N2_vs_FLAVO_rawcounts_tx_RNASEQ.txt
+paste ../order_WBGenes_Tx ${rN2[@]} ${rTIR1m[@]} > ../N2_vs_TIR1m_rawcounts_tx_RNASEQ.txt
+paste ../order_WBGenes_Tx ${rN2[@]} ${rTIR1p[@]} > ../N2_vs_TIR1p_rawcounts_tx_RNASEQ.txt
+paste ../order_WBGenes_Tx ${rTOP1m[@]} ${rTOP1p[@]} > ../TOP1m_vs_TOP1p_rawcounts_tx_RNASEQ.txt
+paste ../order_WBGenes_Tx ${rTOP2m[@]} ${rTOP2p[@]} > ../TOP2m_vs_TOP2p_rawcounts_tx_RNASEQ.txt
+paste ../order_WBGenes_Tx ${rTIR1m[@]} ${rTIR1p[@]} > ../TIR1m_vs_TIR1p_rawcounts_tx_RNASEQ.txt
 
 # Clean up
 cd ../..
-mkdir rawc
-mv tmp/*raw* rawc/.
+mkdir rnaseq_rawc
+mv tmp/*raw* rnaseq_rawc/.
 rm -r tmp

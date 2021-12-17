@@ -5,54 +5,60 @@ library(edgeR)
 library(ggplot2)
 source("/Users/aa/Documents/GitHub/SalmonEISA/SalmonEISA_func.R")
 
-##### Files (counts, geneTable) and parameters (EdgeR)
+# input files and parameters
 gene_table <- "wormbase/c_elegans.PRJNA13758.WS279.TableGeneIDs.tsv"
-txFile <- "rawcounts/ALL_GT/TIR1wtA_vs_TIR1sd3degA_rawcounts_transcript.txt"
-geFile <- "rawcounts/ALL_GT/TIR1wtA_vs_TIR1sd3degA_rawcounts_gene.txt"
 
-conditions <- c("WT","WT","WT","sdc3","sdc3","sdc3")
-#######
+EISA(gene_table=gene_table,geFile="rawcounts/bolaji1612/N2_vs_AMA_rawcounts_gene.txt",
+           txFile="rawcounts/bolaji1612/N2_vs_AMA_rawcounts_transcript.txt",
+           conditions=c("N2","N2","AMA","AMA"))
 
+EISA(gene_table=gene_table,geFile="rawcounts/bolaji1612/N2_vs_FLAVO_rawcounts_gene.txt",
+           txFile="rawcounts/bolaji1612/N2_vs_FLAVO_rawcounts_transcript.txt",
+         conditions=c("N2","N2","FLAVO","FLAVO"))
 
+EISA(gene_table=gene_table,geFile="rawcounts/bolaji1612/N2_vs_TIR1m_rawcounts_gene.txt",
+           txFile="rawcounts/bolaji1612/N2_vs_TIR1m_rawcounts_transcript.txt",
+           conditions=c("N2","N2","TIR1m","TIR1m","TIR1m"))
 
-# read in the "genes" counts as intronic
-cntIn <- read.delim(geFile, row.names = 1)
-# aggregate the transcripts counts by genes, as exonic
-cntEx <- get_cnt(txFile)
+EISA(gene_table=gene_table,geFile="rawcounts/bolaji1612/N2_vs_TIR1p_rawcounts_gene.txt",
+           txFile="rawcounts/bolaji1612/N2_vs_TIR1p_rawcounts_transcript.txt",
+           conditions=c("N2","N2","TIR1p","TIR1p","TIR1p"))
 
-#list of WORMBASE IDs present in both introns and exons raw counts
-genes.in.both <- intersect(rownames(cntEx),rownames(cntIn))
-# Get rid of genes existing only in 1 count table
-cntIn <- cntIn[rownames(cntIn) %in% genes.in.both,]
-cntEx <- cntEx[rownames(cntEx) %in% genes.in.both,]
+EISA(gene_table=gene_table,geFile="rawcounts/bolaji1612/TOP1m_vs_TOP1p_rawcounts_gene.txt",
+           txFile="rawcounts/bolaji1612/TOP1m_vs_TOP1p_rawcounts_transcript.txt",
+           conditions=c("TOP1m","TOP1m","TOP1m","TOP1p","TOP1p","TOP1p"))
 
-# Change Gene_IDs to gene names
-cntIn <- get_names(cntIn, gene_table)
-cntEx <- get_names(cntEx, gene_table)
+EISA(gene_table=gene_table,geFile="rawcounts/bolaji1612/TOP2m_vs_TOP2p_rawcounts_gene.txt",
+           txFile="rawcounts/bolaji1612/TOP2m_vs_TOP2p_rawcounts_transcript.txt",
+           conditions=c("TOP2m","TOP2m","TOP2m","TOP2p","TOP2p","TOP2p"))
 
-# Normalize exonic and intronic counts to av. sequencing depth and filter by abundance
-# find genes with sufficient exonic and intronic counts (genes.sel)
-cntEx.norm <- as.data.frame(t(mean(colSums(cntEx))*t(cntEx)/colSums(cntEx)))
-cntIn.norm <- as.data.frame(t(mean(colSums(cntIn))*t(cntIn)/colSums(cntIn)))
+EISA(gene_table=gene_table,geFile="rawcounts/bolaji1612/TIR1m_vs_TIR1p_rawcounts_gene.txt",
+           txFile="rawcounts/bolaji1612/TIR1m_vs_TIR1p_rawcounts_transcript.txt",
+           conditions=c("TIR1m","TIR1m","TIR1m","TIR1p","TIR1p","TIR1p"))
+###########################################################################################
+VOLC(gene_table=gene_table,
+     txFile="rawcounts/bolaji1612_rnaseq/N2_vs_AMA_rawcounts_tx_RNASEQ.txt",
+     conditions=c("N2","N2","AMA","AMA"))
 
-genes.sel <- rowSums(cntIn.norm != 0)>=(ncol(cntIn)) & rowSums(cntEx.norm != 0)>=(ncol(cntEx)) & rowMeans(log2(cntEx.norm+8))>=5 & rowMeans(log2(cntIn.norm+8))>=5 #32(24) 
-#4.321928 #20 (12)
+VOLC(gene_table=gene_table,
+     txFile="rawcounts/bolaji1612_rnaseq/N2_vs_FLAVO_rawcounts_tx_RNASEQ.txt",
+     conditions=c("N2","N2","FLAVO","FLAVO"))
 
-# Keep counts only of genes with sufficient exonic and intronic counts (genes.sel)
-cntEx <- cntEx[genes.sel,]
-cntIn <- cntIn[genes.sel,]
+VOLC(gene_table=gene_table,
+     txFile="rawcounts/bolaji1612_rnaseq/N2_vs_TIR1m_rawcounts_tx_RNASEQ.txt",
+     conditions=c("N2","N2","TIR1m","TIR1m","TIR1m"))
 
-# edgeR workflow
-ttEx <- edgeR_flow(cntEx,conditions)
-ttIn <- edgeR_flow(cntIn,conditions)
+VOLC(gene_table=gene_table,
+     txFile="rawcounts/bolaji1612_rnaseq/N2_vs_TIR1p_rawcounts_tx_RNASEQ.txt",
+     conditions=c("N2","N2","TIR1p","TIR1p","TIR1p"))
 
-delta.cnt <- data.frame(row.names = rownames(ttEx),
-                        dExon=ttEx$logFC,
-                        dIntron=ttIn$logFC)
+VOLC(gene_table=gene_table,
+     txFile="rawcounts/bolaji1612_rnaseq/TOP1m_vs_TOP1p_rawcounts_tx_RNASEQ.txt",
+     conditions=c("TOP1m","TOP1m","TOP1m","TOP1p","TOP1p","TOP1p"))
 
-
-delta.cnt.X <- sel_chrom(delta.cnt, gene_table, "X")
-scatter_deltas_X(delta.cnt, delta.cnt.X, conditions)
-
-#Looking for outlier genes on the scatter plot
-print(delta.cnt[delta.cnt$dIntron <= -2 & abs(delta.cnt$dExon) <= 2 ,])
+VOLC(gene_table=gene_table,
+     txFile="rawcounts/bolaji1612_rnaseq/TOP2m_vs_TOP2p_rawcounts_tx_RNASEQ.txt",
+     conditions=c("TOP2m","TOP2m","TOP2m","TOP2p","TOP2p","TOP2p"))
+VOLC(gene_table=gene_table,
+     txFile="rawcounts/bolaji1612_rnaseq/TIR1m_vs_TIR1p_rawcounts_tx_RNASEQ.txt",
+     conditions=c("TIR1m","TIR1m","TIR1m","TIR1p","TIR1p","TIR1p"))
