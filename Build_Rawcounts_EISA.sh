@@ -15,14 +15,18 @@
 
 # Variable names for file paths
 d="../salmon_out"
-repb1=("1" "2" "3" "4")
+rep1=("1" "2")
+rep2=("1" "2" "3")
 
-r366b=()
-r382b=()
-for r in ${repb1[@]}; do
-	r366b+="366b${r} "
-	r382b+="382b${r} "
+rAMA=()
+rFLAVO=()
+rN2=()
+for r in ${rep1[@]}; do
+	rAMA+="AMA_${r} "
+	rFLAVO+="FLAVO_${r} "
+	rN2+="N2_${r} "
 done
+
 
 ### Build Feature-Gene correspondance table
 echo "Building Feature->GeneID correspondance table"
@@ -33,8 +37,8 @@ cd tmp
 grep '>' ../c_elegans.PRJNA13758.WS279.mRNA_transcripts.fa | sed 's/>//g' | sed 's/gene=//g' > gene_tx_list.txt
 grep '>' ../CE_genes_seq.fa | sed 's/>//g' > gene_gen_list.txt
 
-echo "Gene_IDs" > order_WBGenes_GE && awk 'NR==FNR{a[$1];next} $1 in a{print $1}' ${d}/366C1/quant.sf gene_gen_list.txt >> order_WBGenes_GE
-echo "Gene_IDs" > order_WBGenes_Tx && awk 'NR==FNR{a[$1];next} $1 in a{print $2}' ${d}/366C1/quant.sf gene_tx_list.txt >> order_WBGenes_Tx
+echo "Gene_IDs" > order_WBGenes_GE && awk 'NR==FNR{a[$1];next} $1 in a{print $1}' ${d}/AMA_1/quant.sf gene_gen_list.txt >> order_WBGenes_GE
+echo "Gene_IDs" > order_WBGenes_Tx && awk 'NR==FNR{a[$1];next} $1 in a{print $2}' ${d}/AMA_1/quant.sf gene_tx_list.txt >> order_WBGenes_Tx
 
 mkdir gen
 mkdir tx
