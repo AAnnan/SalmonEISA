@@ -6,11 +6,12 @@ library(ggplot2)
 source("/Users/aa/Documents/GitHub/SalmonEISA/SalmonEISA_func.R")
 
 gene_table <- "wormbase/c_elegans.PRJNA13758.WS279.TableGeneIDs.tsv"
-txFile <- "rawcounts/bolaji1612_rnaseq/ALL.txt"
+txFile <- "rawcounts/bolaji1612_rnaseq/ALL.tsv"
 conditions <- c("TIR1m","TIR1m","TIR1m","TIR1p","TIR1p","TIR1p",
                 "TOP1m","TOP1m","TOP1m","TOP1p","TOP1p","TOP1p",
                 "TOP2m","TOP2m","TOP2m","TOP2p","TOP2p","TOP2p",
-                "N2","N2","AMA","AMA","FLAVO","FLAVO")
+                "N2","N2","AMA","AMA","FLAVO","FLAVO",
+                "TOP2_PUB","TOP2_PUB","N2_PUB","N2_PUB","N2_PUB")
 
 # aggregate the transcripts counts by genes, as exonic
 cntEx <- get_cnt(txFile)

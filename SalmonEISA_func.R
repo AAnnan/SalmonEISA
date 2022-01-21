@@ -195,7 +195,7 @@ volc_rnaseq <- function(rnaseq, conditions) {
     theme(plot.title=element_text(size=12, face="italic", margin = margin(t=40, b = -38)))# +lims(x = c(-2, 2), y = c(-2, 2))
   
   #plt
-  ggsave(paste0("Volcano_",exp_cond,".png"), plot = plt)
+  ggsave(paste0("Volcano_",exp_cond,"_NOFILTER",".png"), plot = plt)
 }
 
 VOLC <- function(txFile, gene_table, conditions) {
@@ -207,13 +207,13 @@ VOLC <- function(txFile, gene_table, conditions) {
   
   # Normalize exonic and intronic counts to av. sequencing depth and filter by abundance
   # find genes with sufficient exonic and intronic counts (genes.sel)
-  cntEx.norm <- as.data.frame(t(mean(colSums(cntEx))*t(cntEx)/colSums(cntEx)))
+  #cntEx.norm <- as.data.frame(t(mean(colSums(cntEx))*t(cntEx)/colSums(cntEx)))
 
-  genes.sel <- rowSums(cntEx.norm != 0)>=(ncol(cntEx)) & rowMeans(log2(cntEx.norm+8))>=4.584963 #24 (16) #32(24) 
+  #genes.sel <- rowSums(cntEx.norm != 0)>=(ncol(cntEx)) & rowMeans(log2(cntEx.norm+8))>=4.584963 #24 (16) #32(24) 
   #4.321928 #20 (12)
   
   # Keep counts only of genes with sufficient exonic and intronic counts (genes.sel)
-  cntEx <- cntEx[genes.sel,]
+  #cntEx <- cntEx[genes.sel,]
 
   # edgeR workflow
   tt <- edgeR_flow_rnaseq(cntEx,conditions)
